@@ -146,7 +146,8 @@ static irqreturn_t mtk_timer_interrupt(int irq, void *dev_id)
 
 	/* Acknowledge timer0 irq */
 	writel(GPT_IRQ_ACK(GPT_CLK_EVT), evt->gpt_base + GPT_IRQ_ACK_REG);
-	evt->dev.event_handler(&evt->dev);
+	if (evt->dev.event_handler)
+		evt->dev.event_handler(&evt->dev);
 
 	return IRQ_HANDLED;
 }
