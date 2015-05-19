@@ -14,6 +14,7 @@
 
 /dts-v1/;
 #include "mt8135.dtsi"
+#include <dt-bindings/pinctrl/mt6397-pinfunc.h>
 
 / {
 	model = "MediaTek MT8135 evaluation board";
@@ -168,6 +169,13 @@
 &pwrap {
 	pmic: mt6397 {
 		compatible = "mediatek,mt6397";
+
+		pio6397: pinctrl@c000 {
+			compatible = "mediatek,mt6397-pinctrl";
+			pins-are-numbered;
+			gpio-controller;
+			#gpio-cells = <2>;
+		};
 
 		mt6397regulator: mt6397regulator {
 			compatible = "mediatek,mt6397-regulator";
