@@ -1,0 +1,19 @@
+MT65XX xhci
+
+The device node for Mediatek SOC usb3.0 host controller
+
+Required properties:
+ - compatible : supports "mediatek,mt8173-xhci", "generic-xhci"
+ - reg        : Offset and length of registers
+ - interrupts : Interrupt; mode, number and trigger
+ - usb-phy : the phy that xhci will bind
+ - usb3-lpm-capable: suppots USB3 LPM
+
+Example:
+usb: usb30@11270000 {
+	compatible = "mediatek,mt8173-xhci", "generic-xhci";
+	reg = <0 0x11270000 0 0x1000>;
+	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+	usb-phy = <&u3phy>;
+	usb3-lpm-capable;
+};
