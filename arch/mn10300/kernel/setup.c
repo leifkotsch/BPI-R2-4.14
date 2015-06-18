@@ -87,6 +87,21 @@ static int __init early_mem(char *p)
 early_param("mem", early_mem);
 
 /*
+ * early_init_dt_add_memory_arch() and early_init_dt_alloc_memory_arch()
+ * borrowed from arch/x86/kernel/devicetree.c
+ */
+
+void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+{
+	BUG();
+}
+
+void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+{
+	return __alloc_bootmem(size, align, 0);
+}
+
+/*
  * architecture specific setup
  */
 void __init setup_arch(char **cmdline_p)
