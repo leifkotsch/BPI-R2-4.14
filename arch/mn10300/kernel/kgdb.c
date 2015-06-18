@@ -500,3 +500,8 @@ void kgdb_roundup_cpus(unsigned long flags)
 	smp_jump_to_debugger();
 }
 #endif
+
+void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long ip)
+{
+	regs->pc = ip;
+}
