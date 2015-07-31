@@ -1,0 +1,21 @@
+MT65xx USB3.0 PHY
+
+The device node for Mediatek SOC usb3.0 phy
+
+Required properties:
+ - compatible : Should be "mediatek,mt8173-u3phy"
+ - reg        : Offset and length of registers for phy domain
+ - clocks     : must support all clocks that phy need
+ - clock-names: should be "u3phya_ref" for u3phya reference clock.
+ - #phy-cells : must be 1 for the phy
+
+Example:
+
+u3phy: usb-phy@11290000 {
+	compatible = "mediatek,mt8173-u3phy";
+	reg = <0 0x11290000 0 0x3000>;
+	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+	clock-names = "u3phya_ref";
+	#phy-cells = <1>;
+	status = "okay";
+};
