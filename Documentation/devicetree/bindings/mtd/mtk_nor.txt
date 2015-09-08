@@ -1,0 +1,25 @@
+* MTD SPI nor driver for MTK MT81xx (and similar) serial flash controller
+
+MTK MT81xx serial flash controller is designed for serial Flash device.
+It supports one Flash device with signal mode, dual mode and quad mode.
+
+Required properties:
+- compatible: should be "mediatek,mt8173-nor";
+- reg: physical base address and length of the controller's register
+- clocks: spi nor source clock
+- clock-names: "spi_clk", "axi_clk", "mux_clk", "sf_clk"
+
+See Documentation/devicetree/bindings/clock/clock-bindings.txt
+and Documentation/mtd/spi-nor.txt for details.
+
+Example:
+nor_flash: nor@1100d000 {
+	compatible = "mediatek,mt8173-nor";
+	reg = <0 0x1100d000 0 0xe0>;
+	clocks = <&pericfg CLK_PERI_SPI>,
+		 <&topckgen CLK_TOP_AXI_SEL>,
+		 <&topckgen CLK_TOP_UNIVPLL2_D8>,
+		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+	clock-names = "spi_clk", "axi_clk", "mux_clk", "sf_clk";
+};
+
