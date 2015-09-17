@@ -1,0 +1,18 @@
+* MTD SPI nor driver for MTK MT81xx (and similar) serial flash controller
+
+Required properties:
+- compatible: Should be "mediatek,mt8173-nor";
+- reg: Physical base address and length of the controller's register
+- clocks: spi source clock amd serial flash controller's clock
+- clock-names: "spi", "sf"
+  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+
+Example:
+nor_flash: nor@1100d000 {
+	compatible = "mediatek,mt8173-nor";
+	reg = <0 0x1100D000 0 0xE0>;
+	clocks = <&pericfg CLK_PERI_SPI>,
+			 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+	clock-names = "spi", "sf";
+};
+
