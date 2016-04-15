@@ -16,7 +16,13 @@ Documentation/devicetree/bindings/soc/pwrap.txt
 This document describes the binding for MFD device and its sub module.
 
 Required properties:
-compatible: "mediatek,mt6397" or "mediatek,mt6323"
+- compatible: "mediatek,mt6397" or "mediatek,mt6323"
+- interrupts: mt6323/mt6397 have one interrupt line connecteded to the main SoC
+- interrupt-parent: The parent interrupt controller
+- interrupt-controller : marks the device node as an interrupt controller
+- #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
+  The first cell is the IRQ number.
+  The second cell is the flags, encoded as the trigger masks from
 
 Optional subnodes:
 
@@ -48,6 +54,10 @@ Example:
 
 		pmic {
 			compatible = "mediatek,mt6397";
+			interrupt-parent = <&pio>;
+			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-controller;
+			#interrupt-cells = <2>;
 
 			codec: mt6397codec {
 				compatible = "mediatek,mt6397-codec";
