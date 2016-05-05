@@ -11,7 +11,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- *   Copyright (C) 2011 John Crispin <blogic@openwrt.org>
+ *   Copyright (C) 2011 John Crispin <john@phrozen.org>
  */
 
 #include <linux/kernel.h>
@@ -758,6 +758,6 @@ exit_ltq_etop(void)
 module_init(init_ltq_etop);
 module_exit(exit_ltq_etop);
 
-MODULE_AUTHOR("John Crispin <blogic@openwrt.org>");
+MODULE_AUTHOR("John Crispin <john@phrozen.org>");
 MODULE_DESCRIPTION("Lantiq SoC ETOP");
 MODULE_LICENSE("GPL");
