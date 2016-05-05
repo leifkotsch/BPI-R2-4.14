@@ -7,7 +7,7 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
  *
- *   Copyright (C) 2009-2016 John Crispin <blogic@openwrt.org>
+ *   Copyright (C) 2009-2016 John Crispin <john@phrozen.org>
  *   Copyright (C) 2009-2016 Felix Fietkau <nbd@openwrt.org>
  *   Copyright (C) 2013-2016 Michael Lee <igvtee@gmail.com>
  */
@@ -2711,5 +2711,5 @@ static struct platform_driver mtk_driver = {
 module_platform_driver(mtk_driver);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("John Crispin <blogic@openwrt.org>");
+MODULE_AUTHOR("John Crispin <john@phrozen.org>");
 MODULE_DESCRIPTION("Ethernet driver for MediaTek SoC");
