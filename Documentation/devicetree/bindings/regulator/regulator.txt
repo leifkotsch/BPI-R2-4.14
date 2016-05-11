@@ -68,6 +68,16 @@ Optional properties:
 	0: Disable active discharge.
 	1: Enable active discharge.
 	Absence of this property will leave configuration to default.
+- regulator-allow-change-mode: allow the regulator mode to be configured
+- regulator-supported-modes: Regulators can run in a variety of different operating
+  modes depending on output load. This allows further system power savings by
+  selecting the best (and most efficient) regulator mode for a desired load.
+  The definition for each of these operation is defined at
+  include/linux/regulator/consumer.h
+	0: FAST.
+	1: NORMAL.
+	2: IDLE.
+	3: STANDBY.
 
 Deprecated properties:
 - regulator-compatible: If a regulator chip contains multiple

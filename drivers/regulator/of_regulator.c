@@ -209,6 +209,20 @@ static void of_get_regulation_constraints(struct device_node *np,
 		suspend_state = NULL;
 		suspend_np = NULL;
 	}
+
+	if (of_property_read_bool(np, "regulator-allow-change-mode"))
+		constraints->valid_ops_mask |= REGULATOR_CHANGE_MODE;
+
+	ret = of_property_count_elems_of_size(np,
+					      "regulator-supported-modes",
+					      sizeof(u32));
+	for (i = 0; i < ret; i++) {
+		u32 mode;
+
+		of_property_read_u32_index(np, "regulator-supported-modes",
+					   i, &mode);
+		constraints->valid_modes_mask |= (1 << mode);
+	}
 }
 
 /**
