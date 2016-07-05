@@ -1,4 +1,4 @@
-MediaTek AUXADC
+* Mediatek AUXADC - Analog to Digital Converter on Mediatek mobile soc (mt65xx/mt81xx/mt27xx)
 ===============
 
 The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
@@ -10,12 +10,18 @@ Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
 for the Thermal Controller which holds a phandle to the AUXADC.
 
 Required properties:
-- compatible: Must be "mediatek,mt8173-auxadc"
-- reg: Address range of the AUXADC unit
+  - compatible: "mediatek,mt2701-auxadc" or "mediatek,mt8173-auxadc"
+  - reg: Address range of the AUXADC unit.
+  - clocks: Should contain a clock specifier for each entry in clock-names
+  - clock-names: Should contain "main".
+  - io-channel-cells: Should be 1, see ../iio-bindings.txt
 
 Example:
 
 auxadc: auxadc@11001000 {
-	compatible = "mediatek,mt8173-auxadc";
+	compatible = "mediatek,mt2701-auxadc";
 	reg = <0 0x11001000 0 0x1000>;
+	clocks = <&pericfg CLK_PERI_AUXADC>;
+	clock-names = "main";
+	#io-channel-cells = <1>;
 };
