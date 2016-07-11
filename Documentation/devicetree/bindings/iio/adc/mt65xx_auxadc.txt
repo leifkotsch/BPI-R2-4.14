@@ -14,11 +14,11 @@ Required properties:
   - reg: Address range of the AUXADC unit.
   - clocks: Should contain a clock specifier for each entry in clock-names
   - clock-names: Should contain "main".
-  - io-channel-cells: Should be 1, see ../iio-bindings.txt
+  - #io-channel-cells: Should be 1, see ../iio-bindings.txt
 
 Example:
 
-auxadc: auxadc@11001000 {
+auxadc: adc@11001000 {
 	compatible = "mediatek,mt2701-auxadc";
 	reg = <0 0x11001000 0 0x1000>;
 	clocks = <&pericfg CLK_PERI_AUXADC>;
