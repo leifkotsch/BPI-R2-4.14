@@ -21,6 +21,7 @@
 #include <linux/of_platform.h>
 #include <linux/platform_device.h>
 #include <drm/drmP.h>
+#include <soc/mediatek/smi.h>
 #include "mtk_drm_drv.h"
 #include "mtk_drm_plane.h"
 #include "mtk_drm_ddp_comp.h"
@@ -306,6 +307,10 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
 		return -EPROBE_DEFER;
 	}
 	of_node_put(larb_node);
+
+	/* Wait until MTK IOMMU and SMI probe done.*/
+	if (!mtk_smi_larb_is_ready(&larb_pdev->dev))
+		return -EPROBE_DEFER;
 
 	comp->larb_dev = &larb_pdev->dev;
 
