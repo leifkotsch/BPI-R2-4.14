@@ -66,6 +66,11 @@ int mtk_vcodec_init_enc_pm(struct mtk_vcodec_dev *mtkdev)
 	pdev = mtkdev->plat_dev;
 	pm->dev = &pdev->dev;
 
+	/* Wait until MTK IOMMU and SMI probe done.*/
+	if (!mtk_smi_larb_is_ready(pm->larbvenc) ||
+	    !mtk_smi_larb_is_ready(pm->larbvenclt))
+		return -EPROBE_DEFER;
+
 	pm->vencpll_d2 = devm_clk_get(&pdev->dev, "venc_sel_src");
 	if (IS_ERR(pm->vencpll_d2)) {
 		mtk_v4l2_err("devm_clk_get vencpll_d2 fail");
