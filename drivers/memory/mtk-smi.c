@@ -150,6 +150,14 @@ void mtk_smi_larb_put(struct device *larbdev)
 }
 EXPORT_SYMBOL_GPL(mtk_smi_larb_put);
 
+bool mtk_smi_larb_is_ready(struct device *larbdev)
+{
+	struct mtk_smi_larb *larb = dev_get_drvdata(larbdev);
+
+	return larb && larb->mmu;
+}
+EXPORT_SYMBOL_GPL(mtk_smi_larb_is_ready);
+
 static int
 mtk_smi_larb_bind(struct device *dev, struct device *master, void *data)
 {

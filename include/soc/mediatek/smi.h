@@ -33,6 +33,9 @@ struct mtk_smi_iommu {
 	struct mtk_smi_larb_iommu larb_imu[MTK_LARB_NR_MAX];
 };
 
+/* Whether SMI-larb has probe done. */
+bool mtk_smi_larb_is_ready(struct device *larbdev);
+
 /*
  * mtk_smi_larb_get: Enable the power domain and clocks for this local arbiter.
  *                   It also initialize some basic setting(like iommu).
@@ -45,6 +48,11 @@ int mtk_smi_larb_get(struct device *larbdev);
 void mtk_smi_larb_put(struct device *larbdev);
 
 #else
+
+static inline bool mtk_smi_larb_is_ready(struct device *larbdev)
+{
+	return false;
+}
 
 static inline int mtk_smi_larb_get(struct device *larbdev)
 {
