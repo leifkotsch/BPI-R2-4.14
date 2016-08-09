@@ -310,10 +310,8 @@ static int mtk_hdmi_ddc_probe(struct platform_device *pdev)
 	ddc->adap.dev.parent = &pdev->dev;
 
 	ret = i2c_add_adapter(&ddc->adap);
-	if (ret < 0) {
-		dev_err(dev, "failed to add bus to i2c core\n");
+	if (ret < 0)
 		goto err_clk_disable;
-	}
 
 	platform_set_drvdata(pdev, ddc);
 
