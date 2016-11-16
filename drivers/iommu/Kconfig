@@ -357,7 +357,7 @@ config MTK_IOMMU
 
 config MTK_IOMMU_V1
 	bool "MTK IOMMU Version 1 (M4U gen1) Support"
-	depends on ARM
+	depends on ARM && COMMON_CLK
 	depends on ARCH_MEDIATEK || COMPILE_TEST
 	select ARM_DMA_USE_IOMMU
 	select IOMMU_API
