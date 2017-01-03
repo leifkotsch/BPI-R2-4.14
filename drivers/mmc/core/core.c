@@ -431,6 +431,25 @@ void mmc_wait_for_req_done(struct mmc_host *host, struct mmc_request *mrq)
 
 		mmc_retune_recheck(host);
 
+		/*
+		 * If a R1B CMD such as CMD6 occur CRC error,
+		 * it will retry 3 times here.
+		 * But before retrying, it must ensure card is in
+		 * transfer state.
+		 * Otherwise, the next retried CMD will got TMO error.
+		 */
+		if (mmc_resp_type(cmd) == MMC_RSP_R1B && host->ops->card_busy) {
+			int tries = 500; /* Wait aprox 500ms at maximum */
+
+			while (host->ops->card_busy(host) && --tries)
+				mmc_delay(1);
+
+			if (tries == 0) {
+				cmd->error = -EBUSY;
+				break;
+			}
+		}
+
 		pr_debug("%s: req failed (CMD%u): %d, retrying...\n",
 			 mmc_hostname(host), cmd->opcode, cmd->error);
 		cmd->retries--;
