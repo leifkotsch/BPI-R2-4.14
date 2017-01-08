@@ -39,6 +39,7 @@ armadeus	ARMadeus Systems SARL
 arrow	Arrow Electronics
 artesyn	Artesyn Embedded Technologies Inc.
 asahi-kasei	Asahi Kasei Corp.
+asiarf	AsiaRF Co., Ltd.
 aspeed	ASPEED Technology Inc.
 atlas	Atlas Scientific LLC
 atmel	Atmel Corporation
