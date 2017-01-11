@@ -192,29 +192,13 @@ static int mtk_wdt_probe(struct platform_device *pdev)
 
 	mtk_wdt_stop(&mtk_wdt->wdt_dev);
 
-	err = watchdog_register_device(&mtk_wdt->wdt_dev);
+	watchdog_stop_on_reboot(&mtk_wdt->wdt_dev);
+	err = devm_watchdog_register_device(&pdev->dev, &mtk_wdt->wdt_dev);
 	if (unlikely(err))
 		return err;
 
 	dev_info(&pdev->dev, "Watchdog enabled (timeout=%d sec, nowayout=%d)\n",
 			mtk_wdt->wdt_dev.timeout, nowayout);
-
-	return 0;
-}
-
-static void mtk_wdt_shutdown(struct platform_device *pdev)
-{
-	struct mtk_wdt_dev *mtk_wdt = platform_get_drvdata(pdev);
-
-	if (watchdog_active(&mtk_wdt->wdt_dev))
-		mtk_wdt_stop(&mtk_wdt->wdt_dev);
-}
-
-static int mtk_wdt_remove(struct platform_device *pdev)
-{
-	struct mtk_wdt_dev *mtk_wdt = platform_get_drvdata(pdev);
-
-	watchdog_unregister_device(&mtk_wdt->wdt_dev);
 
 	return 0;
 }
@@ -256,8 +240,6 @@ static const struct dev_pm_ops mtk_wdt_pm_ops = {
 
 static struct platform_driver mtk_wdt_driver = {
 	.probe		= mtk_wdt_probe,
-	.remove		= mtk_wdt_remove,
-	.shutdown	= mtk_wdt_shutdown,
 	.driver		= {
 		.name		= DRV_NAME,
 		.pm		= &mtk_wdt_pm_ops,
