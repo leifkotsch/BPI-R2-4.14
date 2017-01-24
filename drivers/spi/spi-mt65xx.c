@@ -20,6 +20,7 @@
 #include <linux/ioport.h>
 #include <linux/module.h>
 #include <linux/of.h>
+#include <linux/of_device.h>
 #include <linux/of_gpio.h>
 #include <linux/platform_device.h>
 #include <linux/platform_data/spi-mt65xx.h>
@@ -663,6 +664,10 @@ static int mtk_spi_probe(struct platform_device *pdev)
 		goto err_put_master;
 	}
 
+	/* Call of_dma_configure to set up spi_master's dma_ops */
+	of_dma_configure(&master->dev, master->dev.of_node);
+	/* But explicitly set the coherent_dma_mask to 0 */
+	master->dev.coherent_dma_mask = 0;
 	if (!pdev->dev.dma_mask)
 		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
 
