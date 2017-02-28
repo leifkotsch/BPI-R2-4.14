@@ -253,8 +253,8 @@ static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
 		if (st->current_prot) {
 			note_prot_uxn(st, addr);
 			note_prot_wx(st, addr);
-			pt_dump_seq_printf(st->seq, "0x%016lx-0x%016lx   ",
-				   st->start_address, addr);
+			pt_dump_seq_printf(st->seq, "%pK-%pK   ",
+				   (void *)st->start_address, (void *)addr);
 
 			delta = (addr - st->start_address) >> 10;
 			while (!(delta & 1023) && unit[1]) {
