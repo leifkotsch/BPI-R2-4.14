@@ -530,8 +530,6 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
 	bool use_r1b_resp = use_busy_signal;
 	unsigned char old_timing = host->ios.timing;
 
-	mmc_retune_hold(host);
-
 	/*
 	 * If the cmd timeout and the max_busy_timeout of the host are both
 	 * specified, let's validate them. A failure means we need to prevent
@@ -563,6 +561,7 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
 		cmd.sanitize_busy = true;
 
 	err = mmc_wait_for_cmd(host, &cmd, MMC_CMD_RETRIES);
+	mmc_retune_hold(host);
 	if (err)
 		goto out;
 
