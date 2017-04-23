@@ -1,0 +1,67 @@
+Mediatek MT7623 PCIe PHY
+-----------------------
+
+Required properties:
+ - compatible: Should contain "mediatek,mt7623-pcie-phy"
+ - #phy-cells: must be 0
+ - clocks: Must contain an entry in clock-names.
+	See ../clocks/clock-bindings.txt for details.
+ - clock-names: Must be "refclk"
+ - resets: Must contain an entry in reset-names.
+	See ../reset/reset.txt for details.
+ - reset-names: Must be "phy"
+
+Optional properties:
+ - phy-switch: The PHY on PCIe port2 is shared with USB u3phy2. If you
+	want to enable port2, you should contain it.
+
+Example:
+
+	pcie0_phy: pciephy@1a149000 {
+		compatible = "mediatek,mt7623-pcie-phy";
+		reg = <0 0x1a149000 0 0x1000>;
+		clocks = <&clk26m>;
+		clock-names = "pciephya_ref";
+		#phy-cells = <0>;
+		status = "disabled";
+	};
+
+	pcie1_phy: pciephy@1a14a000 {
+		compatible = "mediatek,mt7623-pcie-phy";
+		reg = <0 0x1a14a000 0 0x1000>;
+		clocks = <&clk26m>;
+		clock-names = "pciephya_ref";
+		#phy-cells = <0>;
+		status = "disabled";
+	};
+
+	pcie2_phy: pciephy@1a244000 {
+		compatible = "mediatek,mt7623-pcie-phy";
+		reg = <0 0x1a244000 0 0x1000>;
+		clocks = <&clk26m>;
+		clock-names = "pciephya_ref";
+		#phy-cells = <0>;
+
+		phy-switch = <&hifsys>;
+		status = "disabled";
+	};
+
+Specifying phy control of devices
+---------------------------------
+
+Device nodes should specify the configuration required in their "phys"
+property, containing a phandle to the phy node and phy-names.
+
+Example:
+
+#include <dt-bindings/phy/phy.h>
+
+pcie: pcie@1a140000 {
+	...
+	pcie@1,0 {
+		...
+		phys = <&pcie0_phy>;
+		phy-names = "pcie-phy0";
+	}
+	...
+};
