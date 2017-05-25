@@ -1,0 +1,64 @@
+Mediatek PCIe PHY
+-----------------------
+
+Required properties:
+ - compatible: should be one of
+   "mediatek,mt7623-pcie-phy"
+   "mediatek,mt2701-pcie-phy"
+ - reg: Base address and length of the registers.
+ - clocks: Must contain an entry in clock-names.
+   See ../clocks/clock-bindings.txt for details.
+ - clock-names: Must be "pciephya_ref"
+ - #phy-cells: Must be 0.
+
+Optional properties:
+ - mediatek,phy-switch: A phandle to the system controller, used to
+   enable the PCIe PHY function if needed.
+
+Example:
+
+	pcie0_phy: pcie-phy@1a149000 {
+		compatible = "mediatek,mt7623-pcie-phy";
+		reg = <0 0x1a149000 0 0x1000>;
+		clocks = <&clk26m>;
+		clock-names = "pciephya_ref";
+		#phy-cells = <0>;
+	};
+
+	pcie1_phy: pcie-phy@1a14a000 {
+		compatible = "mediatek,mt7623-pcie-phy";
+		reg = <0 0x1a14a000 0 0x1000>;
+		clocks = <&clk26m>;
+		clock-names = "pciephya_ref";
+		#phy-cells = <0>;
+	};
+
+	pcie2_phy: pcie-phy@1a244000 {
+		compatible = "mediatek,mt7623-pcie-phy";
+		reg = <0 0x1a244000 0 0x1000>;
+		clocks = <&clk26m>;
+		clock-names = "pciephya_ref";
+		#phy-cells = <0>;
+
+		mediatek,phy-switch = <&hifsys>;
+	};
+
+Specifying phy control of devices
+---------------------------------
+
+Device nodes should specify the configuration required in their "phys"
+property, containing a phandle to the phy node and phy-names.
+
+Example:
+
+#include <dt-bindings/phy/phy.h>
+
+pcie: pcie@1a140000 {
+	...
+	pcie@0,0 {
+		...
+		phys = <&pcie0_phy>;
+		phy-names = "pcie-phy0";
+	}
+	...
+};
