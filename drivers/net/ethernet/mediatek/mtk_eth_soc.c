@@ -16,6 +16,7 @@
 #include <linux/of_mdio.h>
 #include <linux/of_net.h>
 #include <linux/mfd/syscon.h>
+#include <linux/interrupt.h>
 #include <linux/regmap.h>
 #include <linux/clk.h>
 #include <linux/pm_runtime.h>
