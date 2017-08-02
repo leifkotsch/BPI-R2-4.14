@@ -1,0 +1,26 @@
+Device-Tree bindings for MediaTek BTIF controller found on those
+MediaTek SoCs with Bluetooth feature
+
+Required properties:
+- compatible: Should be one of:
+	- "mediatek,mt7622-btif" : for MT7622 SoC
+	- "mediatek,mt7623-btif" : for MT7623 SoC
+- reg: The base address of the BTIF register bank;
+- interrupts: A single interrupt specifier;
+- clocks: list of clock specifiers, corresponding to
+	  entries in clock-names property;
+- clock-names: should contain "main" entries.
+
+Optional properties:
+- mediatek,loopback: Boolean; if defined, indicates that BTIF controller
+	running on the loopback mode.
+
+Example:
+
+	btif: btif@1100c000 {
+		compatible = "mediatek,mt7623-btif";
+		reg = <0 0x1100c000 0 0x1000>;
+		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_LOW>;
+		clocks = <&pericfg CLK_PERI_BTIF>;
+		clock-names = "main";
+	};
