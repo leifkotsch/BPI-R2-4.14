@@ -323,7 +323,7 @@ static int mtk_rtc_probe(struct platform_device *pdev)
 	rtc->addr_base = res->start;
 
 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-	rtc->irq = irq_create_mapping(mt6397_chip->irq_domain, res->start);
+	rtc->irq = res->start;
 	if (rtc->irq <= 0)
 		return -EINVAL;
 
