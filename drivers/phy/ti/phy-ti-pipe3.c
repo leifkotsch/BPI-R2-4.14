@@ -27,6 +27,7 @@
 #include <linux/pm_runtime.h>
 #include <linux/delay.h>
 #include <linux/phy/omap_control_phy.h>
+#include <linux/of_device.h>
 #include <linux/of_platform.h>
 #include <linux/mfd/syscon.h>
 #include <linux/regmap.h>
@@ -611,7 +612,6 @@ static int ti_pipe3_get_tx_rx_base(struct ti_pipe3 *phy)
 static int ti_pipe3_get_pll_base(struct ti_pipe3 *phy)
 {
 	struct resource *res;
-	const struct of_device_id *match;
 	struct device *dev = phy->dev;
 	struct device_node *node = dev->of_node;
 	struct platform_device *pdev = to_platform_device(dev);
@@ -619,11 +619,7 @@ static int ti_pipe3_get_pll_base(struct ti_pipe3 *phy)
 	if (of_device_is_compatible(node, "ti,phy-pipe3-pcie"))
 		return 0;
 
-	match = of_match_device(ti_pipe3_id_table, dev);
-	if (!match)
-		return -EINVAL;
-
-	phy->dpll_map = (struct pipe3_dpll_map *)match->data;
+	phy->dpll_map = of_device_get_match_data(dev);
 	if (!phy->dpll_map) {
 		dev_err(dev, "no DPLL data\n");
 		return -EINVAL;
