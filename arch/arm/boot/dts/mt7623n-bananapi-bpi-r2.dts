@@ -17,6 +17,17 @@
 		serial2 = &uart2;
 	};
 
+	backlight_lcd: backlight_lcd {
+		compatible = "pwm-backlight";
+		pwms = <&bls 0 100000>;
+		brightness-levels = <
+			  0  16  32  48  64  80  96 112
+			128 144 160 176 192 208 224 240
+			255
+		>;
+		default-brightness-level = <9>;
+	};
+
 	chosen {
 		stdout-path = "serial2:115200n8";
 	};
@@ -84,6 +95,12 @@
 	memory@80000000 {
 		reg = <0 0x80000000 0 0x40000000>;
 	};
+};
+
+&bls {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&bls_pins_a>;
 };
 
 &cir {
@@ -210,6 +227,12 @@
 };
 
 &pio {
+	bls_pins_a: bls@0 {
+		pins_cmd_dat {
+			pinmux = <MT7623_PIN_203_PWM0_FUNC_DISP_PWM>;
+		};
+	};
+
 	cir_pins_a:cir@0 {
 		pins_cir {
 			pinmux = <MT7623_PIN_46_IR_FUNC_IR>;
@@ -270,6 +293,21 @@
 			pinmux = <MT7623_PIN_239_EXT_SDIO0_FUNC_GPIO239>,
 				 <MT7623_PIN_240_EXT_XCS_FUNC_GPIO240>,
 				 <MT7623_PIN_241_EXT_SCK_FUNC_GPIO241>;
+		};
+	};
+
+	mipi_dsi_pin: mipi_dsi_pin {
+		pins_cmd_dat {
+			pinmux = <MT7623_PIN_100_MIPI_TDP0_FUNC_TDP0>,
+				 <MT7623_PIN_99_MIPI_TDN0_FUNC_TDN0>,
+				 <MT7623_PIN_98_MIPI_TDP1_FUNC_TDP1>,
+				 <MT7623_PIN_97_MIPI_TDN1_FUNC_TDN1>,
+				 <MT7623_PIN_96_MIPI_TCP_FUNC_TCP>,
+				 <MT7623_PIN_95_MIPI_TCN_FUNC_TCN>,
+				 <MT7623_PIN_94_MIPI_TDP2_FUNC_TDP2>,
+				 <MT7623_PIN_93_MIPI_TDN2_FUNC_TDN2>,
+				 <MT7623_PIN_92_MIPI_TDP3_FUNC_TDP3>,
+				 <MT7623_PIN_91_MIPI_TDN3_FUNC_TDN3>;
 		};
 	};
 
@@ -378,8 +416,7 @@
 
 	pwm_pins_a: pwm@0 {
 		pins_pwm {
-			pinmux = <MT7623_PIN_203_PWM0_FUNC_PWM0>,
-				 <MT7623_PIN_204_PWM1_FUNC_PWM1>,
+			pinmux = <MT7623_PIN_204_PWM1_FUNC_PWM1>,
 				 <MT7623_PIN_205_PWM2_FUNC_PWM2>,
 				 <MT7623_PIN_206_PWM3_FUNC_PWM3>,
 				 <MT7623_PIN_207_PWM4_FUNC_PWM4>;
