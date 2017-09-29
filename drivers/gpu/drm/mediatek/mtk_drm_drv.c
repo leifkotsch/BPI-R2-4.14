@@ -382,6 +382,8 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
 	{ }
 };
 
+static int foo = 0;
+void mtk_mmsys_init(struct device_node *node);
 static int mtk_drm_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
@@ -391,6 +393,11 @@ static int mtk_drm_probe(struct platform_device *pdev)
 	struct component_match *match = NULL;
 	int ret;
 	int i;
+
+	if (!foo) {
+		mtk_mmsys_init(dev->of_node);
+		foo = 1;
+	}
 
 	private = devm_kzalloc(dev, sizeof(*private), GFP_KERNEL);
 	if (!private)
