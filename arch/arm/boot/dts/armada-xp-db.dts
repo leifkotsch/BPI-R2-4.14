@@ -184,7 +184,6 @@
 				status = "okay";
 				num-cs = <1>;
 				marvell,nand-keep-config;
-				marvell,nand-enable-arbiter;
 				nand-on-flash-bbt;
 
 				partitions {
