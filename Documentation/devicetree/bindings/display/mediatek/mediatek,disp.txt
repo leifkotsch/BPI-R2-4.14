@@ -27,6 +27,7 @@ Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt.
 
 Required properties (all function blocks):
 - compatible: "mediatek,<chip>-disp-<function>", one of
+	"mediatek,<chip>-dispsys"    - central component for the DRM system
 	"mediatek,<chip>-disp-ovl"   - overlay (4 layers, blending, csc)
 	"mediatek,<chip>-disp-rdma"  - read DMA / line buffer
 	"mediatek,<chip>-disp-wdma"  - write DMA
@@ -70,6 +71,11 @@ mmsys: clock-controller@14000000 {
 	power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
 	#clock-cells = <1>;
 };
+
+dispsys: display-system {
+	compatible = "mediatek,mt2701-dispsys";
+	mediatek,mmsys = <&mmsys>;
+}
 
 ovl0: ovl@1400c000 {
 	compatible = "mediatek,mt8173-disp-ovl";
