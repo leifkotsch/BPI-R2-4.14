@@ -911,6 +911,11 @@
 			#clock-cells = <1>;
 		};
 
+		dispsys: display-system {
+			compatible = "mediatek,mt2701-dispsys";
+			mediatek,mmsys = <&mmsys>;
+		}
+
 		mdp_rdma0: rdma@14001000 {
 			compatible = "mediatek,mt8173-mdp-rdma",
 				     "mediatek,mt8173-mdp";
