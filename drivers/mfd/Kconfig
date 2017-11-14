@@ -378,6 +378,15 @@ config MFD_MC13XXX_I2C
 	help
 	  Select this if your MC13xxx is connected via an I2C bus.
 
+config MFD_MEDIATEK_MMSYS
+	tristate "Mediatek MMSYS interface"
+	select MDF_CORE
+	select REGMAP_MMIO
+	help
+	  Select this if you have a MMSYS subsystem in your SoC. The
+	  MMSYS subsystem has at least a clock driver part and some
+	  DRM components.
+
 config MFD_MXS_LRADC
 	tristate "Freescale i.MX23/i.MX28 LRADC"
 	depends on ARCH_MXS || COMPILE_TEST
