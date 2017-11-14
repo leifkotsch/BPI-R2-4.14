@@ -21,12 +21,19 @@
 
 enum {
 	MMSYS_MT2701 = 1,
+	MMSYS_MT8173,
 };
 
 static const struct mfd_cell mmsys_mt2701_devs[] = {
 	{ .name = "clk-mt2701-mm", },
 	{ .name = "drm-mt2701-mm", },
 };
+
+static const struct mfd_cell mmsys_mt8173_devs[] = {
+	{ .name = "clk-mt8173-mm", },
+	{ .name = "drm-mt8173-mm", },
+};
+
 
 static int mmsys_probe(struct platform_device *pdev)
 {
@@ -46,6 +53,10 @@ static int mmsys_probe(struct platform_device *pdev)
 	case MMSYS_MT2701:
 		mmsys_cells = mmsys_mt2701_devs;
 		nr_cells = ARRAY_SIZE(mmsys_mt2701_devs);
+		break;
+	case MMSYS_MT8173:
+		mmsys_cells = mmsys_mt8173_devs;
+		nr_cells = ARRAY_SIZE(mmsys_mt8173_devs);
 		break;
 	default:
 		return -ENODEV;
@@ -73,6 +84,9 @@ static int mmsys_probe(struct platform_device *pdev)
 static const struct of_device_id of_match_mmsys[] = {
 	{ .compatible = "mediatek,mt2701-mmsys",
 	  .data = (void *) MMSYS_MT2701,
+	},
+	{ .compatible = "mediatek,mt8173-mmsys",
+	  .data = (void *) MMSYS_MT8173,
 	},
 	{ /* sentinel */ },
 };
