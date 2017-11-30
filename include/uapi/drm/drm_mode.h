@@ -173,6 +173,10 @@ extern "C" {
 		DRM_MODE_REFLECT_X | \
 		DRM_MODE_REFLECT_Y)
 
+/* Content Protection Flags */
+#define DRM_MODE_CONTENT_PROTECTION_OFF		0
+#define DRM_MODE_CONTENT_PROTECTION_DESIRED     1
+#define DRM_MODE_CONTENT_PROTECTION_ENABLED     2
 
 struct drm_mode_modeinfo {
 	__u32 clock;
