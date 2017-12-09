@@ -31,4 +31,12 @@ config MTK_SCPSYS
 	  Say yes here to add support for the MediaTek SCPSYS power domain
 	  driver.
 
+config MTK_UWK
+	bool "MediaTek USB Wakeup Support"
+	select REGMAP
+	help
+	  Say yes here to add support for the MediaTek SSUSB-SPM glue layer
+	  which supports some different type of USB wakeup, such as IP-SLEEP,
+	  LINESTATE, IDDIG etc, and it can support multi SSUSB controllers.
+
 endmenu
