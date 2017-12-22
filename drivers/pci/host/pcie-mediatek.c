@@ -66,6 +66,10 @@
 
 /* PCIe V2 per-port registers */
 #define PCIE_MSI_VECTOR		0x0c0
+
+#define PCIE_CONF_ID		0x100
+#define PCIE_CONF_CLASS		0x104
+
 #define PCIE_INT_MASK		0x420
 #define INTX_MASK		GENMASK(19, 16)
 #define INTX_SHIFT		16
@@ -385,6 +389,14 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
 		val |= PCIE_CSR_LTSSM_EN(port->slot) |
 		       PCIE_CSR_ASPM_L1_EN(port->slot);
 		writel(val, pcie->base + PCIE_SYS_CFG_V2);
+
+		/* Set up vendor ID and device ID for MT7622*/
+		val = PCI_VENDOR_ID_MEDIATEK | (PCI_DEVICE_ID_MT7622 << 16);
+		writel(val, port->base + PCIE_CONF_ID);
+
+		/* Set up class code for MT7622 */
+		val = PCI_CLASS_BRIDGE_PCI << 16;
+		writel(val, port->base + PCIE_CONF_CLASS);
 	}
 
 	/* Assert all reset signals */
