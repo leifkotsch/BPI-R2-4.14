@@ -19,8 +19,6 @@
 #include <linux/reset-controller.h>
 #include <linux/slab.h>
 
-#include "clk-mtk.h"
-
 struct mtk_reset {
 	struct regmap *regmap;
 	int regofs;
