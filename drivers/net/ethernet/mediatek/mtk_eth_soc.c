@@ -2434,7 +2434,6 @@ static int mtk_add_mac(struct mtk_eth *eth, struct device_node *np)
 				     sizeof(*mac->hw_stats),
 				     GFP_KERNEL);
 	if (!mac->hw_stats) {
-		dev_err(eth->dev, "failed to allocate counter memory\n");
 		err = -ENOMEM;
 		goto free_netdev;
 	}
