@@ -101,23 +101,15 @@ void mtk_clk_register_factors(const struct mtk_fixed_factor *clks,
 	}
 }
 
-int mtk_clk_register_gates(struct device_node *node,
+int mtk_clk_register_num_gates(struct regmap *regmap,
 		const struct mtk_gate *clks,
 		int num, struct clk_onecell_data *clk_data)
 {
 	int i;
 	struct clk *clk;
-	struct regmap *regmap;
 
 	if (!clk_data)
 		return -ENOMEM;
-
-	regmap = syscon_node_to_regmap(node);
-	if (IS_ERR(regmap)) {
-		pr_err("Cannot find regmap for %pOF: %ld\n", node,
-				PTR_ERR(regmap));
-		return PTR_ERR(regmap);
-	}
 
 	for (i = 0; i < num; i++) {
 		const struct mtk_gate *gate = &clks[i];
@@ -142,6 +134,22 @@ int mtk_clk_register_gates(struct device_node *node,
 	}
 
 	return 0;
+}
+
+int mtk_clk_register_gates(struct device_node *node,
+		const struct mtk_gate *clks,
+		int num, struct clk_onecell_data *clk_data)
+{
+	struct regmap *regmap;
+
+	regmap = syscon_node_to_regmap(node);
+	if (IS_ERR(regmap)) {
+		pr_err("Cannot find regmap for %pOF: %ld\n", node,
+				PTR_ERR(regmap));
+		return PTR_ERR(regmap);
+	}
+
+	return mtk_clk_register_num_gates(regmap, clks, num, clk_data);
 }
 
 struct clk *mtk_clk_register_composite(const struct mtk_composite *mc,

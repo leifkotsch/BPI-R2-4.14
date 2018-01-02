@@ -160,6 +160,10 @@ struct mtk_gate {
 	const struct clk_ops *ops;
 };
 
+int mtk_clk_register_num_gates(struct regmap *regmap,
+		const struct mtk_gate *clks, int num,
+		struct clk_onecell_data *clk_data);
+
 int mtk_clk_register_gates(struct device_node *node,
 			const struct mtk_gate *clks, int num,
 			struct clk_onecell_data *clk_data);
