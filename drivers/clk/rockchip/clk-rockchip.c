@@ -52,15 +52,8 @@ static void __init rk2928_gate_clk_init(struct device_node *node)
 	if (!reg)
 		return;
 
-	clk_data = kzalloc(sizeof(struct clk_onecell_data), GFP_KERNEL);
+	clk_data = clk_alloc_onecell_data(qty);
 	if (!clk_data) {
-		iounmap(reg);
-		return;
-	}
-
-	clk_data->clks = kzalloc(qty * sizeof(struct clk *), GFP_KERNEL);
-	if (!clk_data->clks) {
-		kfree(clk_data);
 		iounmap(reg);
 		return;
 	}
@@ -90,8 +83,6 @@ static void __init rk2928_gate_clk_init(struct device_node *node)
 						      &clk_lock);
 		WARN_ON(IS_ERR(clk_data->clks[i]));
 	}
-
-	clk_data->clk_num = qty;
 
 	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
 }
