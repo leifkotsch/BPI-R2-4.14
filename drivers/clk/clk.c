@@ -3616,6 +3616,55 @@ struct clk_hw *of_clk_hw_simple_get(struct of_phandle_args *clkspec, void *data)
 }
 EXPORT_SYMBOL_GPL(of_clk_hw_simple_get);
 
+/**
+ * clk_alloc_onecell_data - allocate new struct clk_onecell_data
+ * @num_clks: Number of clock pointers to allocate
+ *
+ * An array of clock pointers is allocated and each clock pointer is
+ * initialized to ERR_PTR(-ENOENT).
+ *
+ * Returns: Pointer to struct clk_onecell_data or NULL on failure.
+ */
+struct clk_onecell_data *clk_alloc_onecell_data(size_t num_clks)
+{
+	struct clk_onecell_data *clk_data;
+	int i;
+
+	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
+	if (!clk_data)
+		return NULL;
+
+	clk_data->clks = kcalloc(num_clks, sizeof(*clk_data->clks), GFP_KERNEL);
+	if (!clk_data->clks) {
+		kfree(clk_data);
+		return NULL;
+	}
+
+	for (i = 0; i < num_clks; i++)
+		clk_data->clks[i] = ERR_PTR(-ENOENT);
+
+	clk_data->clk_num = num_clks;
+
+	return clk_data;
+}
+EXPORT_SYMBOL_GPL(clk_alloc_onecell_data);
+
+/**
+ * clk_free_onecell_data - frees @clk_data and associated resources
+ * @clk_data: Pointer to struct clk_onecelldata that was allocated with
+ *            clk_alloc_onecell_data()
+ *
+ * It is safe to call this function even if @clk_data is NULL or an error value.
+ */
+void clk_free_onecell_data(struct clk_onecell_data *clk_data)
+{
+	if (IS_ERR_OR_NULL(clk_data))
+		return;
+
+	kfree(clk_data->clks);
+	kfree(clk_data);
+}
+
 struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data)
 {
 	struct clk_onecell_data *clk_data = data;
