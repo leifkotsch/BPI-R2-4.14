@@ -1008,15 +1008,11 @@ static struct clk ** __init sunxi_divs_clk_setup(struct device_node *node,
 		return NULL;
 	}
 
-	clk_data = kmalloc(sizeof(struct clk_onecell_data), GFP_KERNEL);
+	clk_data = clk_alloc_onecell_data(ndivs);
 	if (!clk_data)
 		goto out_unmap;
 
-	clks = kcalloc(ndivs, sizeof(*clks), GFP_KERNEL);
-	if (!clks)
-		goto free_clkdata;
-
-	clk_data->clks = clks;
+	clks = clk_data->clks;
 
 	/* It's not a good idea to have automatic reparenting changing
 	 * our RAM clock! */
@@ -1041,7 +1037,7 @@ static struct clk ** __init sunxi_divs_clk_setup(struct device_node *node,
 		if (data->div[i].gate) {
 			gate = kzalloc(sizeof(*gate), GFP_KERNEL);
 			if (!gate)
-				goto free_clks;
+				goto free_clkdata;
 
 			gate->reg = reg;
 			gate->bit_idx = data->div[i].gate;
@@ -1104,10 +1100,8 @@ static struct clk ** __init sunxi_divs_clk_setup(struct device_node *node,
 	return clks;
 free_gate:
 	kfree(gate);
-free_clks:
-	kfree(clks);
 free_clkdata:
-	kfree(clk_data);
+	clk_free_onecell_data(clk_data);
 out_unmap:
 	iounmap(reg);
 	return NULL;

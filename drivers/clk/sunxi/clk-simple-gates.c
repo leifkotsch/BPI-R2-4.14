@@ -44,16 +44,12 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
 
 	clk_parent = of_clk_get_parent_name(node, 0);
 
-	clk_data = kmalloc(sizeof(struct clk_onecell_data), GFP_KERNEL);
-	if (!clk_data)
-		goto err_unmap;
-
 	number = of_property_count_u32_elems(node, "clock-indices");
 	of_property_read_u32_index(node, "clock-indices", number - 1, &number);
 
-	clk_data->clks = kcalloc(number + 1, sizeof(struct clk *), GFP_KERNEL);
-	if (!clk_data->clks)
-		goto err_free_data;
+	clk_data = clk_alloc_onecell_data(number + 1);
+	if (!clk_data)
+		goto err_unmap;
 
 	of_property_for_each_u32(node, "clock-indices", prop, p, index) {
 		of_property_read_string_index(node, "clock-output-names",
@@ -80,13 +76,10 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
 
 	}
 
-	clk_data->clk_num = number + 1;
 	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
 
 	return;
 
-err_free_data:
-	kfree(clk_data);
 err_unmap:
 	iounmap(reg);
 	of_address_to_resource(node, 0, &res);

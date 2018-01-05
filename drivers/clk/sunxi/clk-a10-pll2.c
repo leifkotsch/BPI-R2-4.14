@@ -58,13 +58,11 @@ static void __init sun4i_pll2_setup(struct device_node *node,
 	if (IS_ERR(reg))
 		return;
 
-	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
+	clk_data = clk_alloc_onecell_data(SUN4I_PLL2_OUTPUTS);
 	if (!clk_data)
 		goto err_unmap;
 
-	clks = kcalloc(SUN4I_PLL2_OUTPUTS, sizeof(struct clk *), GFP_KERNEL);
-	if (!clks)
-		goto err_free_data;
+	clks = clk_data->clks;
 
 	parent = of_clk_get_parent_name(node, 0);
 	prediv_clk = clk_register_divider(NULL, "pll2-prediv",
@@ -75,7 +73,7 @@ static void __init sun4i_pll2_setup(struct device_node *node,
 					  &sun4i_a10_pll2_lock);
 	if (IS_ERR(prediv_clk)) {
 		pr_err("Couldn't register the prediv clock\n");
-		goto err_free_array;
+		goto err_free_data;
 	}
 
 	/* Setup the gate part of the PLL2 */
@@ -166,8 +164,6 @@ static void __init sun4i_pll2_setup(struct device_node *node,
 							    2, 1);
 	WARN_ON(IS_ERR(clks[SUN4I_A10_PLL2_8X]));
 
-	clk_data->clks = clks;
-	clk_data->clk_num = SUN4I_PLL2_OUTPUTS;
 	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
 
 	return;
@@ -178,10 +174,8 @@ err_free_gate:
 	kfree(gate);
 err_unregister_prediv:
 	clk_unregister_divider(prediv_clk);
-err_free_array:
-	kfree(clks);
 err_free_data:
-	kfree(clk_data);
+	clk_free_onecell_data(clk_data);
 err_unmap:
 	iounmap(reg);
 }

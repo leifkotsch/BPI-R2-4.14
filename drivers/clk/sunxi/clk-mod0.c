@@ -310,18 +310,13 @@ static void __init sunxi_mmc_setup(struct device_node *node,
 		return;
 	}
 
-	clk_data = kmalloc(sizeof(*clk_data), GFP_KERNEL);
+	clk_data = clk_alloc_onecell_data(3);
 	if (!clk_data)
 		return;
 
-	clk_data->clks = kcalloc(3, sizeof(*clk_data->clks), GFP_KERNEL);
-	if (!clk_data->clks)
-		goto err_free_data;
-
-	clk_data->clk_num = 3;
 	clk_data->clks[0] = sunxi_factors_register(node, data, lock, reg);
 	if (!clk_data->clks[0])
-		goto err_free_clks;
+		goto err_free_data;
 
 	parent = __clk_get_name(clk_data->clks[0]);
 
@@ -361,10 +356,8 @@ static void __init sunxi_mmc_setup(struct device_node *node,
 
 	return;
 
-err_free_clks:
-	kfree(clk_data->clks);
 err_free_data:
-	kfree(clk_data);
+	clk_free_onecell_data(clk_data);
 }
 
 static DEFINE_SPINLOCK(sun4i_a10_mmc_lock);
