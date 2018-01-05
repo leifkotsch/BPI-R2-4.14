@@ -476,12 +476,8 @@ static void __init hi3620_mmc_clk_init(struct device_node *node)
 		return;
 	}
 
-	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
+	clk_data = clk_alloc_onecell_data(num);
 	if (WARN_ON(!clk_data))
-		return;
-
-	clk_data->clks = kcalloc(num, sizeof(*clk_data->clks), GFP_KERNEL);
-	if (!clk_data->clks)
 		return;
 
 	for (i = 0; i < num; i++) {
@@ -490,7 +486,6 @@ static void __init hi3620_mmc_clk_init(struct device_node *node)
 			hisi_register_clk_mmc(mmc_clk, base, node);
 	}
 
-	clk_data->clk_num = num;
 	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
 }
 
