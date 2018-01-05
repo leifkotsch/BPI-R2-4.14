@@ -310,7 +310,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
 {
 	struct device_node *pnode;
 	void __iomem *reg;
-	struct clk_onecell_data *clk_data;
+	struct clk_onecell_data *clk_data = NULL;
 	const char **parents;
 	int num_parents, i;
 	spinlock_t *rlock = NULL;
@@ -341,21 +341,15 @@ static void __init st_of_flexgen_setup(struct device_node *np)
 		clk_mode = data->mode;
 	}
 
-	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
-	if (!clk_data)
-		goto err;
-
 	ret = of_property_count_strings(np, "clock-output-names");
 	if (ret <= 0) {
 		pr_err("%s: Failed to get number of output clocks (%d)",
-				__func__, clk_data->clk_num);
+				__func__, ret);
 		goto err;
 	}
-	clk_data->clk_num = ret;
 
-	clk_data->clks = kcalloc(clk_data->clk_num, sizeof(struct clk *),
-			GFP_KERNEL);
-	if (!clk_data->clks)
+	clk_data = clk_alloc_onecell_data(ret);
+	if (!clk_data)
 		goto err;
 
 	rlock = kzalloc(sizeof(spinlock_t), GFP_KERNEL);
@@ -397,8 +391,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
 
 err:
 	iounmap(reg);
-	if (clk_data)
-		kfree(clk_data->clks);
+	clk_free_onecell_data(clk_data);
 	kfree(clk_data);
 	kfree(parents);
 	kfree(rlock);

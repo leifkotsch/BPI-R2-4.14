@@ -869,18 +869,9 @@ static void __init st_of_create_quadfs_fsynths(
 	struct clk_onecell_data *clk_data;
 	int fschan;
 
-	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
+	clk_data = clk_alloc_onecell_data(QUADFS_MAX_CHAN);
 	if (!clk_data)
 		return;
-
-	clk_data->clk_num = QUADFS_MAX_CHAN;
-	clk_data->clks = kzalloc(QUADFS_MAX_CHAN * sizeof(struct clk *),
-				 GFP_KERNEL);
-
-	if (!clk_data->clks) {
-		kfree(clk_data);
-		return;
-	}
 
 	for (fschan = 0; fschan < QUADFS_MAX_CHAN; fschan++) {
 		struct clk *clk;
