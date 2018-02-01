@@ -1036,6 +1036,9 @@ static int scpsys_probe(struct platform_device *pdev)
 	int i, ret;
 
 	match = of_match_device(of_scpsys_match_tbl, &pdev->dev);
+	if (!match)
+		return -EINVAL;
+
 	soc = (const struct scp_soc_data *)match->data;
 
 	scp = init_scp(pdev, soc->domains, soc->num_domains, &soc->regs,
