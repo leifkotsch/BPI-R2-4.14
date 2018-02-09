@@ -67,7 +67,7 @@
 #define U300_WDOG_IFR_WILL_BARK_IRQ_FORCE_ENABLE			0x0001U
 
 /* Default timeout in seconds = 1 minute */
-static unsigned int margin = 60;
+static unsigned int margin;
 static int irq;
 static void __iomem *virtbase;
 static struct device *parent;
