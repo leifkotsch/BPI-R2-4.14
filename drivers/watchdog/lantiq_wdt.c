@@ -1,8 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
 /*
- *  This program is free software; you can redistribute it and/or modify it
- *  under the terms of the GNU General Public License version 2 as published
- *  by the Free Software Foundation.
- *
  *  Copyright (C) 2010 John Crispin <john@phrozen.org>
  *  Copyright (C) 2017 Hauke Mehrtens <hauke@hauke-m.de>
  *  Based on EP93xx wdt driver
@@ -306,4 +303,4 @@ module_param(nowayout, bool, 0);
 MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started");
 MODULE_AUTHOR("John Crispin <john@phrozen.org>");
 MODULE_DESCRIPTION("Lantiq SoC Watchdog");
-MODULE_LICENSE("GPL");
+MODULE_LICENSE("GPL v2");

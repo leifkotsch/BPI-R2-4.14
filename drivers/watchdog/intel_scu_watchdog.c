@@ -1,24 +1,10 @@
+// SPDX-License-Identifier: GPL-2.0
 /*
  *      Intel_SCU 0.2:  An Intel SCU IOH Based Watchdog Device
  *			for Intel part #(s):
  *				- AF82MP20 PCH
  *
  *      Copyright (C) 2009-2010 Intel Corporation. All rights reserved.
- *
- *      This program is free software; you can redistribute it and/or
- *      modify it under the terms of version 2 of the GNU General
- *      Public License as published by the Free Software Foundation.
- *
- *      This program is distributed in the hope that it will be
- *      useful, but WITHOUT ANY WARRANTY; without even the implied
- *      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- *      PURPOSE.  See the GNU General Public License for more details.
- *      You should have received a copy of the GNU General Public
- *      License along with this program; if not, write to the Free
- *      Software Foundation, Inc., 59 Temple Place - Suite 330,
- *      Boston, MA  02111-1307, USA.
- *      The full GNU General Public License is included in this
- *      distribution in the file called COPYING.
  *
  */
 
@@ -561,5 +547,5 @@ module_exit(intel_scu_watchdog_exit);
 
 MODULE_AUTHOR("Intel Corporation");
 MODULE_DESCRIPTION("Intel SCU Watchdog Device Driver");
-MODULE_LICENSE("GPL");
+MODULE_LICENSE("GPL v2");
 MODULE_VERSION(WDT_VER);

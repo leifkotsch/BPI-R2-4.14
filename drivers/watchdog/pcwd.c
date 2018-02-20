@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0+
 /*
  * PC Watchdog Driver
  * by Ken Hollis (khollis@bitgate.com)

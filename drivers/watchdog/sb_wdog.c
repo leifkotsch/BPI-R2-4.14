@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-1.0 OR GPL-2.0
 /*
  * Watchdog driver for SiByte SB1 SoCs
  *
@@ -37,10 +38,6 @@
  *
  *	(c) Copyright 1996 Alan Cox <alan@lxorguk.ukuu.org.uk>,
  *						All Rights Reserved.
- *
- *	This program is free software; you can redistribute it and/or
- *	modify it under the terms of the GNU General Public License
- *	version 1 or 2 as published by the Free Software Foundation.
  *
  */
 

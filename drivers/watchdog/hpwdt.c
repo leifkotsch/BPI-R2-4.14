@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0
 /*
  *	HPE WatchDog Driver
  *	based on
@@ -6,10 +7,6 @@
  *
  *	(c) Copyright 2015 Hewlett Packard Enterprise Development LP
  *	Thomas Mingarelli <thomas.mingarelli@hpe.com>
- *
- *	This program is free software; you can redistribute it and/or
- *	modify it under the terms of the GNU General Public License
- *	version 2 as published by the Free Software Foundation
  *
  */
 
@@ -426,7 +423,7 @@ static struct pci_driver hpwdt_driver = {
 
 MODULE_AUTHOR("Tom Mingarelli");
 MODULE_DESCRIPTION("hp watchdog driver");
-MODULE_LICENSE("GPL");
+MODULE_LICENSE("GPL v2");
 MODULE_VERSION(HPWDT_VERSION);
 
 module_param(soft_margin, int, 0);

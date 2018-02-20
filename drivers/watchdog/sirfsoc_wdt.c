@@ -1,9 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0+
 /*
  * Watchdog driver for CSR SiRFprimaII and SiRFatlasVI
  *
  * Copyright (c) 2013 Cambridge Silicon Radio Limited, a CSR plc group company.
- *
- * Licensed under GPLv2 or later.
  */
 
 #include <linux/module.h>
@@ -227,5 +226,5 @@ module_platform_driver(sirfsoc_wdt_driver);
 
 MODULE_DESCRIPTION("SiRF SoC watchdog driver");
 MODULE_AUTHOR("Xianglong Du <Xianglong.Du@csr.com>");
-MODULE_LICENSE("GPL v2");
+MODULE_LICENSE("GPL+");
 MODULE_ALIAS("platform:sirfsoc-wdt");

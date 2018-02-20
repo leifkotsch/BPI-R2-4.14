@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0
 /*
  *      intel-mid_wdt: generic Intel MID SCU watchdog driver
  *
@@ -7,9 +8,6 @@
  *      Copyright (C) 2014 Intel Corporation. All rights reserved.
  *      Contact: David Cohen <david.a.cohen@linux.intel.com>
  *
- *      This program is free software; you can redistribute it and/or
- *      modify it under the terms of version 2 of the GNU General
- *      Public License as published by the Free Software Foundation.
  */
 
 #include <linux/interrupt.h>
@@ -185,4 +183,4 @@ module_platform_driver(mid_wdt_driver);
 
 MODULE_AUTHOR("David Cohen <david.a.cohen@linux.intel.com>");
 MODULE_DESCRIPTION("Watchdog Driver for Intel MID platform");
-MODULE_LICENSE("GPL");
+MODULE_LICENSE("GPL v2");

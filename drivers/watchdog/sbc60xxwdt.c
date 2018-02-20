@@ -1,16 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0+
 /*
  *	60xx Single Board Computer Watchdog Timer driver for Linux 2.2.x
  *
  *	Based on acquirewdt.c by Alan Cox.
- *
- *	This program is free software; you can redistribute it and/or
- *	modify it under the terms of the GNU General Public License
- *	as published by the Free Software Foundation; either version
- *	2 of the License, or (at your option) any later version.
- *
- *	The author does NOT admit liability nor provide warranty for
- *	any of this software. This material is provided "AS-IS" in
- *	the hope that it may be useful for others.
  *
  *	(c) Copyright 2000    Jakob Oestergaard <jakob@unthought.net>
  *

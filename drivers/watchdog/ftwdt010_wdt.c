@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0
 /*
  * Watchdog driver for Faraday Technology FTWDT010
  *
@@ -6,9 +7,6 @@
  * Inspired by the out-of-tree drivers from OpenWRT:
  * Copyright (C) 2009 Paulius Zaleckas <paulius.zaleckas@teltonika.lt>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
  */
 
 #include <linux/bitops.h>
@@ -233,4 +231,4 @@ static struct platform_driver ftwdt010_wdt_driver = {
 module_platform_driver(ftwdt010_wdt_driver);
 MODULE_AUTHOR("Linus Walleij");
 MODULE_DESCRIPTION("Watchdog driver for Faraday Technology FTWDT010");
-MODULE_LICENSE("GPL");
+MODULE_LICENSE("GPL v2");

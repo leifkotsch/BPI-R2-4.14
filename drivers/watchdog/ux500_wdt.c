@@ -1,7 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (C) ST-Ericsson SA 2011-2013
- *
- * License Terms: GNU General Public License v2
  *
  * Author: Mathieu Poirier <mathieu.poirier@linaro.org> for ST-Ericsson
  * Author: Jonas Aaberg <jonas.aberg@stericsson.com> for ST-Ericsson
@@ -165,5 +164,5 @@ module_platform_driver(ux500_wdt_driver);
 
 MODULE_AUTHOR("Jonas Aaberg <jonas.aberg@stericsson.com>");
 MODULE_DESCRIPTION("Ux500 Watchdog Driver");
-MODULE_LICENSE("GPL");
+MODULE_LICENSE("GPL v2");
 MODULE_ALIAS("platform:ux500_wdt");

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0+
 /*
  * Blackfin On-Chip Watchdog Driver
  *
@@ -8,7 +9,6 @@
  *
  * Enter bugs at http://blackfin.uclinux.org/
  *
- * Licensed under the GPL-2 or later.
  */
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt

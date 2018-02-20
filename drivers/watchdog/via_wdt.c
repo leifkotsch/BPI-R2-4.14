@@ -1,8 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0
 /*
  * VIA Chipset Watchdog Driver
  *
  * Copyright (C) 2011 Sigfox
- * License terms: GNU General Public License (GPL) version 2
  * Author: Marc Vertes <marc.vertes@sigfox.com>
  * Based on a preliminary version from Harald Welte <HaraldWelte@viatech.com>
  * Timer code by Wim Van Sebroeck <wim@iguana.be>
@@ -258,4 +258,4 @@ module_pci_driver(wdt_driver);
 
 MODULE_AUTHOR("Marc Vertes");
 MODULE_DESCRIPTION("Driver for watchdog timer on VIA chipset");
-MODULE_LICENSE("GPL");
+MODULE_LICENSE("GPL v2");
