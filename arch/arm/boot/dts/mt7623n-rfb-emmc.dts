@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Copyright (c) 2017-2018 MediaTek Inc.
+ * Author: Sean Wang <sean.wang@mediatek.com>
+ *
+ */
+
+/dts-v1/;
+#include "mt7623n-rfb.dtsi"
+
+/ {
+	model = "MediaTek MT7623N with eMMC reference board";
+	compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
+
+	chosen {
+		bootargs = "console=ttyS2,115200n8 earlyprintk";
+	};
+};
+
+&eth {
+	gmac1: mac@1 {
+		compatible = "mediatek,eth-mac";
+		reg = <1>;
+		phy-handle = <&phy5>;
+	};
+};
+
+&mdio {
+	phy5: ethernet-phy@5 {
+		reg = <5>;
+		phy-mode = "rgmii-rxid";
+	};
+};
+
+&mmc0 {
+	status = "okay";
+};
