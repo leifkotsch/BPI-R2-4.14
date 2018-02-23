@@ -100,6 +100,9 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a7";
 			reg = <0x1>;
+			clocks = <&infracfg CLK_INFRA_CPUSEL>,
+				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+			clock-names = "cpu", "intermediate";
 			operating-points-v2 = <&cpu_opp_table>;
 			clock-frequency = <1300000000>;
 		};
@@ -108,6 +111,9 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a7";
 			reg = <0x2>;
+			clocks = <&infracfg CLK_INFRA_CPUSEL>,
+				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+			clock-names = "cpu", "intermediate";
 			operating-points-v2 = <&cpu_opp_table>;
 			clock-frequency = <1300000000>;
 		};
@@ -116,6 +122,9 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a7";
 			reg = <0x3>;
+			clocks = <&infracfg CLK_INFRA_CPUSEL>,
+				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+			clock-names = "cpu", "intermediate";
 			operating-points-v2 = <&cpu_opp_table>;
 			clock-frequency = <1300000000>;
 		};
