@@ -301,8 +301,17 @@ static int mtk_pconf_set_pull_select(struct mtk_pinctrl *pctl,
 	 * resistor bit, so we need this special handle.
 	 */
 	if (pctl->devdata->spec_pull_set) {
-		ret = pctl->devdata->spec_pull_set(mtk_get_regmap(pctl, pin),
-			pin, pctl->devdata->port_align, isup, arg);
+		if (enable) {
+			ret = pctl->devdata->spec_pull_set(
+				mtk_get_regmap(pctl, pin), pin,
+				pctl->devdata->port_align, isup,
+				arg);
+		} else {
+			ret = pctl->devdata->spec_pull_set(
+				mtk_get_regmap(pctl, pin), pin,
+				pctl->devdata->port_align, isup,
+				MTK_PUPD_SET_R1R0_00);
+		}
 		if (!ret)
 			return 0;
 	}
