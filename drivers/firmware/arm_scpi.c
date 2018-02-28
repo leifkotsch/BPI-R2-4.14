@@ -257,7 +257,8 @@ struct scpi_xfer {
 
 struct scpi_chan {
 	struct mbox_client cl;
-	struct mbox_chan *chan;
+	struct mbox_chan *tx_chan;
+	struct mbox_chan *rx_chan;
 	void __iomem *tx_payload;
 	void __iomem *rx_payload;
 	struct list_head rx_pending;
@@ -541,7 +542,7 @@ static int scpi_send_message(u8 idx, void *tx_buf, unsigned int tx_len,
 	msg->rx_len = rx_len;
 	reinit_completion(&msg->done);
 
-	ret = mbox_send_message(scpi_chan->chan, msg);
+	ret = mbox_send_message(scpi_chan->tx_chan, msg);
 	if (ret < 0 || !rx_buf)
 		goto out;
 
@@ -894,8 +895,10 @@ scpi_free_channels(struct device *dev, struct scpi_chan *pchan, int count)
 {
 	int i;
 
-	for (i = 0; i < count && pchan->chan; i++, pchan++) {
-		mbox_free_channel(pchan->chan);
+	for (i = 0; i < count && pchan->tx_chan; i++, pchan++) {
+		if (pchan->rx_chan && pchan->rx_chan != pchan->tx_chan)
+			mbox_free_channel(pchan->rx_chan);
+		mbox_free_channel(pchan->tx_chan);
 		devm_kfree(dev, pchan->xfers);
 		devm_iounmap(dev, pchan->rx_payload);
 	}
@@ -950,7 +953,7 @@ static const struct of_device_id legacy_scpi_of_match[] = {
 
 static int scpi_probe(struct platform_device *pdev)
 {
-	int count, idx, ret;
+	int count, idx, mbox_idx, ret;
 	struct resource res;
 	struct scpi_chan *scpi_chan;
 	struct device *dev = &pdev->dev;
@@ -973,7 +976,7 @@ static int scpi_probe(struct platform_device *pdev)
 	if (!scpi_chan)
 		return -ENOMEM;
 
-	for (idx = 0; idx < count; idx++) {
+	for (idx = 0, mbox_idx = 0; mbox_idx < count; idx++) {
 		resource_size_t size;
 		struct scpi_chan *pchan = scpi_chan + idx;
 		struct mbox_client *cl = &pchan->cl;
@@ -1009,13 +1012,25 @@ static int scpi_probe(struct platform_device *pdev)
 
 		ret = scpi_alloc_xfer_list(dev, pchan);
 		if (!ret) {
-			pchan->chan = mbox_request_channel(cl, idx);
-			if (!IS_ERR(pchan->chan))
+			pchan->tx_chan = mbox_request_channel(cl, idx * 2);
+			if (mbox_chan_is_bidirectional(pchan->tx_chan)) {
+				pchan->rx_chan = pchan->tx_chan;
+				mbox_idx += 1;
+			} else {
+				pchan->rx_chan = mbox_request_channel(cl, idx * 2 + 1);
+				mbox_idx += 2;
+			}
+			/* This isn't quite right, but the idea stands. */
+			if (!IS_ERR(pchan->tx_chan) && !IS_ERR(pchan->rx_chan))
 				continue;
-			ret = PTR_ERR(pchan->chan);
+			ret = PTR_ERR(pchan->tx_chan);
 			if (ret != -EPROBE_DEFER)
 				dev_err(dev, "failed to get channel%d err %d\n",
-					idx, ret);
+					idx * 2, ret);
+			ret = PTR_ERR(pchan->rx_chan);
+			if (ret != -EPROBE_DEFER)
+				dev_err(dev, "failed to get channel%d err %d\n",
+					idx * 2 + 1, ret);
 		}
 err:
 		scpi_free_channels(dev, scpi_chan, idx);
@@ -1024,7 +1039,7 @@ err:
 	}
 
 	scpi_info->channels = scpi_chan;
-	scpi_info->num_chans = count;
+	scpi_info->num_chans = idx;
 	scpi_info->commands = scpi_std_commands;
 
 	platform_set_drvdata(pdev, scpi_info);
