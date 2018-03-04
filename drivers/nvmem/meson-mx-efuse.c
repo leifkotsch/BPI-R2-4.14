@@ -234,10 +234,7 @@ static int meson_mx_efuse_probe(struct platform_device *pdev)
 	}
 
 	efuse->nvmem = devm_nvmem_register(&pdev->dev, &efuse->config);
-	if (IS_ERR(efuse->nvmem))
-		return PTR_ERR(efuse->nvmem);
-
-	return 0;
+	return PTR_ERR_OR_ZERO(efuse->nvmem);
 }
 
 static struct platform_driver meson_mx_efuse_driver = {
