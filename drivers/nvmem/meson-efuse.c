@@ -61,10 +61,7 @@ static int meson_efuse_probe(struct platform_device *pdev)
 	econfig.size = size;
 
 	nvmem = devm_nvmem_register(&pdev->dev, &econfig);
-	if (IS_ERR(nvmem))
-		return PTR_ERR(nvmem);
-
-	return 0;
+	return PTR_ERR_OR_ZERO(nvmem);
 }
 
 static struct platform_driver meson_efuse_driver = {
