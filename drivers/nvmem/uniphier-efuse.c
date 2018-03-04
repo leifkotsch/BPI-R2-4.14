@@ -61,10 +61,7 @@ static int uniphier_efuse_probe(struct platform_device *pdev)
 	econfig.priv = priv;
 	econfig.dev = dev;
 	nvmem = devm_nvmem_register(dev, &econfig);
-	if (IS_ERR(nvmem))
-		return PTR_ERR(nvmem);
-
-	return 0;
+	return PTR_ERR_OR_ZERO(nvmem);
 }
 
 static const struct of_device_id uniphier_efuse_of_match[] = {
