@@ -87,10 +87,7 @@ static int lpc18xx_otp_probe(struct platform_device *pdev)
 	lpc18xx_otp_nvmem_config.priv = otp;
 
 	nvmem = devm_nvmem_register(&pdev->dev, &lpc18xx_otp_nvmem_config);
-	if (IS_ERR(nvmem))
-		return PTR_ERR(nvmem);
-
-	return 0;
+	return PTR_ERR_OR_ZERO(nvmem);
 }
 
 static const struct of_device_id lpc18xx_otp_dt_ids[] = {
