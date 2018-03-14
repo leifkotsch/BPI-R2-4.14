@@ -275,3 +275,12 @@ config USB_CHAOSKEY
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called chaoskey.
+
+config USB_CARPLAY
+	tristate "USB carplay driver support"
+	help
+	  The driver is used to support Apple carplay feature.
+	  It is realized by sending a USB Vendor Request of "Apple Device to
+	  Host Mode Switch" to switch Apple Device into host mode.
+	  When the users want to use carplay, they can force the driver to send
+	  this Vendor Request by a debugfs interface.
