@@ -59,8 +59,6 @@ static int usb_phy_roothub_add_phy(struct device *dev, int index,
 struct usb_phy_roothub *usb_phy_roothub_init(struct device *dev)
 {
 	struct usb_phy_roothub *phy_roothub;
-	struct usb_phy_roothub *roothub_entry;
-	struct list_head *head;
 	int i, num_phys, err;
 
 	num_phys = of_count_phandle_with_args(dev->of_node, "phys",
@@ -75,25 +73,10 @@ struct usb_phy_roothub *usb_phy_roothub_init(struct device *dev)
 	for (i = 0; i < num_phys; i++) {
 		err = usb_phy_roothub_add_phy(dev, i, &phy_roothub->list);
 		if (err)
-			goto err_out;
-	}
-
-	head = &phy_roothub->list;
-
-	list_for_each_entry(roothub_entry, head, list) {
-		err = phy_init(roothub_entry->phy);
-		if (err)
-			goto err_exit_phys;
+			return ERR_PTR(err);
 	}
 
 	return phy_roothub;
-
-err_exit_phys:
-	list_for_each_entry_continue_reverse(roothub_entry, head, list)
-		phy_exit(roothub_entry->phy);
-
-err_out:
-	return ERR_PTR(err);
 }
 EXPORT_SYMBOL_GPL(usb_phy_roothub_init);
 
@@ -106,13 +89,8 @@ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub)
 	if (!phy_roothub)
 		return 0;
 
-	head = &phy_roothub->list;
-
-	list_for_each_entry(roothub_entry, head, list) {
-		err = phy_exit(roothub_entry->phy);
-		if (err)
-			ret = ret;
-	}
+	/* TODO: usb_phy_roothub_del_phy */
+	/* TODO: usb_phy_roothub_free */
 
 	return ret;
 }
@@ -130,16 +108,23 @@ int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub)
 	head = &phy_roothub->list;
 
 	list_for_each_entry(roothub_entry, head, list) {
-		err = phy_power_on(roothub_entry->phy);
+		err = phy_init(roothub_entry->phy);
 		if (err)
 			goto err_out;
+		err = phy_power_on(roothub_entry->phy);
+		if (err) {
+			phy_exit(roothub_entry->phy);
+			goto err_out;
+		}
 	}
 
 	return 0;
 
 err_out:
-	list_for_each_entry_continue_reverse(roothub_entry, head, list)
+	list_for_each_entry_continue_reverse(roothub_entry, head, list) {
 		phy_power_off(roothub_entry->phy);
+		phy_exit(roothub_entry->phy);
+	}
 
 	return err;
 }
@@ -152,7 +137,9 @@ void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub)
 	if (!phy_roothub)
 		return;
 
-	list_for_each_entry_reverse(roothub_entry, &phy_roothub->list, list)
+	list_for_each_entry_reverse(roothub_entry, &phy_roothub->list, list) {
 		phy_power_off(roothub_entry->phy);
+		phy_exit(roothub_entry->phy);
+	}
 }
 EXPORT_SYMBOL_GPL(usb_phy_roothub_power_off);
