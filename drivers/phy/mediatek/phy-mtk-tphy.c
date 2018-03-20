@@ -841,7 +841,7 @@ static int mtk_phy_init(struct phy *phy)
 	ret = clk_prepare_enable(instance->ref_clk);
 	if (ret) {
 		dev_err(tphy->dev, "failed to enable ref_clk\n");
-		return ret;
+		goto disable_u3phya_ref;
 	}
 
 	switch (instance->type) {
@@ -859,10 +859,17 @@ static int mtk_phy_init(struct phy *phy)
 		break;
 	default:
 		dev_err(tphy->dev, "incompatible PHY type\n");
-		return -EINVAL;
+		ret = -EINVAL;
+		goto disable_ref_clk;
 	}
 
 	return 0;
+
+disable_ref_clk:
+	clk_disable_unprepare(instance->ref_clk);
+disable_u3phya_ref:
+	clk_disable_unprepare(tphy->u3phya_ref);
+	return ret;
 }
 
 static int mtk_phy_power_on(struct phy *phy)
