@@ -220,6 +220,10 @@ static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
 		fp = frame_pointer(regs);
 		mode = processor_mode(regs);
 	} else if (tsk != current) {
+		if (tsk->state == TASK_RUNNING) {
+			pr_notice("Do not dump other running tasks\n");
+			return;
+		}
 		fp = thread_saved_fp(tsk);
 		mode = 0x10;
 	} else {
