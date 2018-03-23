@@ -17,6 +17,7 @@
 
 #define RTC_BBPU		0x0000
 #define RTC_BBPU_CBUSY		BIT(6)
+#define RTC_BBPU_KEY            (0x43 << 8)
 
 #define RTC_WRTGR		0x003c
 
