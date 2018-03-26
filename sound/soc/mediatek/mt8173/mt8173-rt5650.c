@@ -356,5 +356,4 @@ module_platform_driver(mt8173_rt5650_driver);
 MODULE_DESCRIPTION("MT8173 RT5650 SoC machine driver");
 MODULE_AUTHOR("Koro Chen <koro.chen@mediatek.com>");
 MODULE_LICENSE("GPL v2");
-MODULE_ALIAS("platform:mtk-rt5650");
 

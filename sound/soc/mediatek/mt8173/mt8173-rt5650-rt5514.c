@@ -251,5 +251,4 @@ module_platform_driver(mt8173_rt5650_rt5514_driver);
 MODULE_DESCRIPTION("MT8173 RT5650 and RT5514 SoC machine driver");
 MODULE_AUTHOR("Koro Chen <koro.chen@mediatek.com>");
 MODULE_LICENSE("GPL v2");
-MODULE_ALIAS("platform:mtk-rt5650-rt5514");
 
