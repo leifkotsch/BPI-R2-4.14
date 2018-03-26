@@ -673,7 +673,6 @@ static struct platform_driver mtk_xhci_driver = {
 		.of_match_table = of_match_ptr(mtk_xhci_of_match),
 	},
 };
-MODULE_ALIAS("platform:xhci-mtk");
 
 static int __init xhci_mtk_init(void)
 {
