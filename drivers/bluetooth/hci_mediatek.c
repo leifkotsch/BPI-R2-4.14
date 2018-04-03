@@ -319,7 +319,7 @@ static int mtk_close(struct hci_uart *hu)
 	return 0;
 }
 
-int mtk_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
+static int mtk_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
 {
 	struct hci_event_hdr *hdr = (void *)skb->data;
 	struct hci_uart *hu = hci_get_drvdata(hdev);
