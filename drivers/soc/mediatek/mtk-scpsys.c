@@ -121,6 +121,7 @@ struct scp_domain_data {
 	u32 bus_prot_mask;
 	enum clk_id clk_id[MAX_CLKS];
 	bool active_wakeup;
+	u32 us_sram_fwait;
 };
 
 struct scp;
@@ -234,11 +235,16 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
 	val &= ~scpd->data->sram_pdn_bits;
 	writel(val, ctl_addr);
 
-	/* wait until SRAM_PDN_ACK all 0 */
-	ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
-				 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
-	if (ret < 0)
-		goto err_pwr_ack;
+	/* Either wait until SRAM_PDN_ACK all 0 or have a force wait */
+	if (!scpd->data->us_sram_fwait) {
+		ret = readl_poll_timeout(ctl_addr, tmp, (tmp & pdn_ack) == 0,
+					 MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
+		if (ret < 0)
+			goto err_pwr_ack;
+	} else {
+		usleep_range(scpd->data->us_sram_fwait,
+			     scpd->data->us_sram_fwait + 100);
+	};
 
 	if (scpd->data->bus_prot_mask) {
 		ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
@@ -782,6 +788,7 @@ static const struct scp_domain_data scp_domain_data_mt7622[] = {
 		.clk_id = {CLK_NONE},
 		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_WB,
 		.active_wakeup = true,
+		.us_sram_fwait = 12000,
 	},
 };
 
