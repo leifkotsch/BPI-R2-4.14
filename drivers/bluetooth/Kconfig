@@ -104,6 +104,18 @@ config BT_HCIUART_H4
 
 	  Say Y here to compile support for HCI UART (H4) protocol.
 
+config BT_HCIUART_MEDIATEK
+	tristate "MediaTek protocol support"
+	depends on BT_HCIUART_SERDEV
+	select BT_HCIUART_H4
+	help
+	  The MediaTek protocol based on H4 enables patch firmware download and
+	  configuration. This protocol is required for MediaTek Bluetooth
+	  devices with a serial bus such as BTIF, which can be usually found on
+	  various MediaTek SoCs.
+
+	  Say Y here to compile support for MediaTek protocol.
+
 config BT_HCIUART_NOKIA
 	tristate "UART Nokia H4+ protocol support"
 	depends on BT_HCIUART
