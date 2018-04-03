@@ -1,18 +1,47 @@
-Linux kernel
-============
 
-This file was moved to Documentation/admin-guide/README.rst
+Kernel mainline: 4.16 with mediatek patchwork for BPI-R2
 
-Please notice that there are several guides for kernel developers and users.
-These guides can be rendered in a number of formats, like HTML and PDF.
+## Requirements
 
-In order to build the documentation, use ``make htmldocs`` or
-``make pdfdocs``.
+Need cross compile tools for the armhf architecture and additional bison and flex-package:
+```sh
+sudo apt-get install gcc-arm-linux-gnueabihf libc6-armhf-cross u-boot-tools bc make gcc libc6-dev libncurses5-dev libssl-dev bison flex
+```
 
-There are various text files in the Documentation/ subdirectory,
-several of them using the Restructured Text markup notation.
-See Documentation/00-INDEX for a list of what is contained in each file.
+## Usage 
 
-Please read the Documentation/process/changes.rst file, as it contains the
-requirements for building and running the kernel, and information about
-the problems which may result by upgrading your kernel.
+  ./build.sh importconfig
+  ./build.sh config
+  ./build.sh
+
+## Kernel version
+
+Kernel breakdown implemented features.
+
+|          | 4.4 | 4.9 | 4.14 | 4.16|
+|----------| --- | --- | --- | ---|
+| SATA | Y | Y | Y | Y | Y |
+| PCIe | Y | Y | Y | Y | Y |
+| 2 GMAC | Y | Y | N | N | N |
+| DSA | N | Y | Y | Y | Y |
+| VLAN | | | | | |
+| HW NAT | | Y | Y | | |
+| Crypto | Y | Y | Y | Y | Y |
+| WIFI | | | | | |
+| BT | | | | | |
+| HDMI | Y | N | N | N | N |
+| AUDIO | Y | N | N | N | N |
+
+## Links
+
+* BPI-R2: http://www.banana-pi.org/r2.html
+* Kernel: https://www.kernel.org/
+* linux-mediatek: https://patchwork.kernel.org/project/linux-mediatek/list/
+* kernelci: https://kernelci.org/boot/mt7623n-bananapi-bpi-r2/
+
+License
+----
+
+GPL-2.0
+
+**Free Software, Hell Yeah!**
