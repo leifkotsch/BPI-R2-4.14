@@ -704,7 +704,7 @@ mt7530_cpu_port_enable(struct mt7530_priv *priv,
 	 */
 
 	for (i = 0; i < MT7530_NUM_PORTS; i++)
-		if ((priv->ds->enabled_port_mask & BIT(i)) &&
+		if ((priv->ds->ports[port].type==DSA_PORT_TYPE_USER) &&
 		    (dsa_port_upstream_port(priv->ds, i) == port))
 			port_mask |= BIT(i);
 
