@@ -341,7 +341,7 @@ static inline u8 dsa_port_upstream_port(struct dsa_switch *ds, int port)
 	if (ds->ports[port].upstream)
 		return ds->ports[port].upstream;
 	else
-		return dsa_upstream_port(ds);
+		return dsa_upstream_port(ds,port);
 }
 
 typedef int dsa_fdb_dump_cb_t(const unsigned char *addr, u16 vid,

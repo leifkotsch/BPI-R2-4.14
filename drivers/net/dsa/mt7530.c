@@ -702,8 +702,14 @@ mt7530_cpu_port_enable(struct mt7530_priv *priv,
 	/* CPU port gets connected to all user ports of
 	 * the switch
 	 */
+
+	for (i = 0; i < MT7530_NUM_PORTS; i++)
+		if ((priv->ds->enabled_port_mask & BIT(i)) &&
+		    (dsa_port_upstream_port(priv->ds, i) == port))
+			port_mask |= BIT(i);
+
 	mt7530_write(priv, MT7530_PCR_P(port),
-		     PCR_MATRIX(dsa_user_ports(priv->ds)));
+		     PCR_MATRIX(port_mask));
 
 	return 0;
 }
@@ -1209,15 +1215,7 @@ mt7530_port_vlan_del(struct dsa_switch *ds, int port,
 static enum dsa_tag_protocol
 mtk_get_tag_protocol(struct dsa_switch *ds, int port)
 {
-	struct mt7530_priv *priv = ds->priv;
-
-	if (port != MT7530_CPU_PORT) {
-		dev_warn(priv->dev,
-			 "port not matched with tagging CPU port\n");
-		return DSA_TAG_PROTO_NONE;
-	} else {
-		return DSA_TAG_PROTO_MTK;
-	}
+	return DSA_TAG_PROTO_MTK;
 }
 
 static int
