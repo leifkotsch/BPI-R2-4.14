@@ -81,6 +81,8 @@ struct dsa_slave_priv {
 
 	/* TC context */
 	struct list_head	mall_tc_list;
+
+	struct net_device       *master;
 };
 
 /* dsa.c */

@@ -396,6 +396,12 @@ static void dsa_switch_teardown(struct dsa_switch *ds)
 		ds->devlink = NULL;
 	}
 
+	if (port->netdev)
+		port->netdev->dsa_ptr = NULL;
+	if (port->ethernet) {
+		dev_put(port->ethernet);
+		port->ethernet = NULL;
+	}
 }
 
 static int dsa_tree_setup_switches(struct dsa_switch_tree *dst)
@@ -657,6 +663,29 @@ static int dsa_switch_parse_member_of(struct dsa_switch *ds,
 	ds->dst = dsa_tree_touch(m[0]);
 	if (!ds->dst)
 		return -ENOMEM;
+
+	dev_hold(ethernet_dev);
+	ds->ports[index].ethernet = ethernet_dev;
+	ds->cpu_port_mask |= BIT(index);
+
+	return 0;
+}
+
+static int dsa_user_parse(struct dsa_port *port, u32 index,
+			  struct dsa_switch *ds)
+{
+	struct device_node *cpu_port;
+	const unsigned int *cpu_port_reg;
+	int cpu_port_index;
+
+	cpu_port = of_parse_phandle(port->dn, "cpu", 0);
+	if (cpu_port) {
+		cpu_port_reg = of_get_property(cpu_port, "reg", NULL);
+		if (!cpu_port_reg)
+			return -EINVAL;
+		cpu_port_index = be32_to_cpup(cpu_port_reg);
+		ds->ports[index].upstream = cpu_port_index;
+	}
 
 	return 0;
 }

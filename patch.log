@@ -1,0 +1,80 @@
+patching file arch/arm/boot/dts/mt7623.dtsi
+Reversed (or previously applied) patch detected!  Assume -R? [n] n
+Apply anyway? [n] 
+Skipping patch.
+1 out of 1 hunk ignored -- saving rejects to file arch/arm/boot/dts/mt7623.dtsi.rej
+patching file arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+Hunk #2 FAILED at 96.
+Hunk #3 FAILED at 134.
+Hunk #4 succeeded at 178 (offset 22 lines).
+Hunk #5 succeeded at 230 with fuzz 2 (offset 22 lines).
+2 out of 5 hunks FAILED -- saving rejects to file arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts.rej
+patching file drivers/clk/clk.c
+Hunk #1 succeeded at 1029 (offset 233 lines).
+patching file drivers/clk/mediatek/clk-mt2701.c
+Hunk #1 succeeded at 770 (offset -1 lines).
+patching file drivers/net/dsa/mt7530.c
+Hunk #1 succeeded at 678 (offset 8 lines).
+Hunk #2 FAILED at 694.
+Hunk #3 succeeded at 713 (offset 8 lines).
+Hunk #4 succeeded at 724 (offset 8 lines).
+Hunk #5 succeeded at 787 (offset 8 lines).
+Hunk #6 succeeded at 889 (offset 71 lines).
+Hunk #7 succeeded at 917 with fuzz 2 (offset 74 lines).
+Hunk #8 FAILED at 919.
+Hunk #9 succeeded at 1290 (offset 290 lines).
+Hunk #10 succeeded at 1347 (offset 294 lines).
+Hunk #11 succeeded at 1398 (offset 294 lines).
+Hunk #12 succeeded at 1413 (offset 294 lines).
+Hunk #13 succeeded at 1431 (offset 294 lines).
+Hunk #14 succeeded at 1441 with fuzz 2 (offset 295 lines).
+2 out of 14 hunks FAILED -- saving rejects to file drivers/net/dsa/mt7530.c.rej
+patching file drivers/net/dsa/mt7530.h
+Hunk #1 succeeded at 23 (offset 1 line).
+patching file drivers/net/ethernet/mediatek/mtk_eth_soc.c
+Hunk #1 succeeded at 77 (offset -3 lines).
+Hunk #2 succeeded at 410 (offset -3 lines).
+Hunk #3 succeeded at 714 (offset -3 lines).
+Hunk #4 succeeded at 784 (offset -3 lines).
+Hunk #5 succeeded at 1004 (offset -3 lines).
+Hunk #6 succeeded at 1096 (offset -3 lines).
+Hunk #7 succeeded at 1123 (offset -3 lines).
+Hunk #8 succeeded at 1136 (offset -3 lines).
+Hunk #9 succeeded at 1474 (offset -3 lines).
+Hunk #10 succeeded at 1875 (offset -1 lines).
+Hunk #11 succeeded at 1916 (offset -1 lines).
+Hunk #12 succeeded at 2002 (offset 2 lines).
+Hunk #13 succeeded at 2472 (offset 2 lines).
+patching file drivers/net/ethernet/mediatek/mtk_eth_soc.h
+Hunk #1 succeeded at 36 (offset 2 lines).
+Hunk #2 succeeded at 74 (offset 2 lines).
+Hunk #3 succeeded at 293 (offset 2 lines).
+patching file drivers/net/phy/phy_device.c
+Hunk #1 FAILED at 1906.
+1 out of 1 hunk FAILED -- saving rejects to file drivers/net/phy/phy_device.c.rej
+patching file include/net/dsa.h
+Hunk #1 FAILED at 185.
+Hunk #2 FAILED at 266.
+Hunk #3 succeeded at 323 with fuzz 1 (offset 41 lines).
+2 out of 3 hunks FAILED -- saving rejects to file include/net/dsa.h.rej
+patching file net/core/dev.c
+Hunk #1 succeeded at 3730 (offset 119 lines).
+Hunk #2 succeeded at 3871 (offset 119 lines).
+Hunk #3 succeeded at 9160 (offset 371 lines).
+patching file net/dsa/dsa2.c
+Hunk #1 FAILED at 253.
+Hunk #2 succeeded at 396 with fuzz 2 (offset 134 lines).
+Hunk #3 FAILED at 511.
+Hunk #4 succeeded at 664 with fuzz 2 (offset 132 lines).
+Hunk #5 FAILED at 562.
+Hunk #6 FAILED at 575.
+4 out of 6 hunks FAILED -- saving rejects to file net/dsa/dsa2.c.rej
+patching file net/dsa/dsa_priv.h
+Hunk #1 succeeded at 81 (offset -10 lines).
+Hunk #2 FAILED at 179.
+1 out of 2 hunks FAILED -- saving rejects to file net/dsa/dsa_priv.h.rej
+patching file net/dsa/slave.c
+Hunk #1 FAILED at 1257.
+Hunk #2 FAILED at 1295.
+2 out of 2 hunks FAILED -- saving rejects to file net/dsa/slave.c.rej
+
