@@ -207,6 +207,7 @@
 			     "syscon";
 		reg = <0 0x10000000 0 0x1000>;
 		#clock-cells = <1>;
+		#reset-cells = <1>;
 	};
 
 	infracfg: syscon@10001000 {

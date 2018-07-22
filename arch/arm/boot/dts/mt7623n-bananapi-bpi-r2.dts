@@ -135,6 +135,11 @@
 	status = "okay";
 };
 
+mt7530: switch@0 {
+	compatible = "mediatek,mt7530";
+};
+
+
 &cir {
 	pinctrl-names = "default";
 	pinctrl-0 = <&cir_pins_a>;
@@ -160,16 +165,32 @@
 		};
 	};
 
+	gmac1: mac@1 {
+		compatible = "mediatek,eth-mac";
+		reg = <1>;
+		phy-mode = "trgmii";
+
+		fixed-link {
+			speed = <1000>;
+			full-duplex;
+			pause;
+		};
+	};
+
 	mdio: mdio-bus {
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		switch@0 {
+	};
+};
+
+		&mt7530 {
 			compatible = "mediatek,mt7530";
 			reg = <0>;
 			reset-gpios = <&pio 33 0>;
 			core-supply = <&mt6323_vpa_reg>;
 			io-supply = <&mt6323_vemc3v3_reg>;
+			dsa,mii-bus = <&mdio>;
 
 			ports {
 				#address-cells = <1>;
