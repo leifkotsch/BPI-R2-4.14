@@ -3739,9 +3739,9 @@ struct rps_table {
 static struct rps_table rps_table[RPS_TBL_SIZE];
 static int rps_table_last_core;
 
-static void rps_table_expire(unsigned long data)
+static void rps_table_expire(struct timer_list *t)
 {
-	struct rps_table *entry = (struct rps_table *) data;
+	struct rps_table *entry = from_timer(entry, t, expire);
 
 	entry->core = -1;
 }
@@ -3777,8 +3777,7 @@ static void rps_table_init(void)
 
 	for (i = 0; i < RPS_TBL_SIZE; i++) {
 		rps_table[i].core = -1;
-		setup_timer(&rps_table[i].expire, rps_table_expire,
-			    (unsigned long) &rps_table[i]);
+		timer_setup(&rps_table[i].expire, rps_table_expire,0);
 	}
 }
 
