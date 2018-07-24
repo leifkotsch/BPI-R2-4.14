@@ -19,11 +19,10 @@ net/dsa/dsa2.c:674:12: warning: 'dsa_user_parse' defined but not used [-Wunused-
  static int dsa_user_parse(struct dsa_port *port, u32 index,
             ^~~~~~~~~~~~~~
 make[2]: *** [net/dsa/dsa2.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
 make[1]: *** [net/dsa] Error 2
 make[1]: *** Waiting for unfinished jobs....
-Error: arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts:138.9-17 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb] Error 1
-make: *** [dtbs] Error 2
-make: *** Waiting for unfinished jobs....
+arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning (reg_format): /switch@0:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 2)
+arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
 make: *** [net] Error 2

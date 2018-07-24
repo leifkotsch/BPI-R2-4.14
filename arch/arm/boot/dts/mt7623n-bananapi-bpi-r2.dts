@@ -129,16 +129,15 @@
 		device_type = "memory";
 		reg = <0 0x80000000 0 0x80000000>;
 	};
+
+	mt7530: switch@0 {
+		compatible = "mediatek,mt7530";
+	};
 };
 
 &btif {
 	status = "okay";
 };
-
-mt7530: switch@0 {
-	compatible = "mediatek,mt7530";
-};
-
 
 &cir {
 	pinctrl-names = "default";
