@@ -223,6 +223,7 @@ static int dsa_tree_setup_default_cpu(struct dsa_switch_tree *dst)
 {
 	struct dsa_switch *ds;
 	struct dsa_port *dp;
+	//++struct net_device *ethernet_dev;
 	int device, port;
 
 	/* DSA currently only supports a single CPU port */
@@ -242,9 +243,18 @@ static int dsa_tree_setup_default_cpu(struct dsa_switch_tree *dst)
 			dp = &ds->ports[port];
 
 			if (dsa_port_is_user(dp) || dsa_port_is_dsa(dp))
-				dp->cpu_dp = dst->cpu_dp;
+				dp->cpu_dp = dst->cpu_dp; //read out DTS which cpu-port should be used for this port instead of using the "first" one
 		}
 	}
+	//https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/dsa/dsa2.c?id=f070464cf000131928b2c3fd592efd1946610eea
+	//++ethernet = of_parse_phandle(port->dn, "ethernet", 0);
+	//++ethernet_dev = of_find_net_device_by_node(ethernet);
+	//++dev_hold(ethernet_dev);
+	//ds->ports[index].ethernet = ethernet_dev; //how to get the index of port??
+	//in old  dsa_cpu_parse it is a param of the function, here i guess i need to do this assignment in loop above
+	//change masks to const: https://patchwork.ozlabs.org/patch/830765/
+	//ds->cpu_port_mask |= BIT(index);
+	//++ds->ports[index].type=DSA_PORT_TYPE_CPU;
 
 	return 0;
 }
@@ -327,6 +337,13 @@ static void dsa_port_teardown(struct dsa_port *dp)
 		break;
 	case DSA_PORT_TYPE_CPU:
 	case DSA_PORT_TYPE_DSA:
+		//https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/dsa/dsa2.c?id=1d27732f411d57f0168af30be2adb504b8b7749d
+		if (dp->master)
+			dp->master->dsa_ptr = NULL;
+		if (dp->ethernet) {
+			dev_put(dp->ethernet);
+			dp->ethernet = NULL;
+		}
 		dsa_port_link_unregister_of(dp);
 		break;
 	case DSA_PORT_TYPE_USER:
@@ -394,13 +411,6 @@ static void dsa_switch_teardown(struct dsa_switch *ds)
 		devlink_unregister(ds->devlink);
 		devlink_free(ds->devlink);
 		ds->devlink = NULL;
-	}
-
-	if (port->netdev)
-		port->netdev->dsa_ptr = NULL;
-	if (port->ethernet) {
-		dev_put(port->ethernet);
-		port->ethernet = NULL;
 	}
 }
 
@@ -663,10 +673,6 @@ static int dsa_switch_parse_member_of(struct dsa_switch *ds,
 	ds->dst = dsa_tree_touch(m[0]);
 	if (!ds->dst)
 		return -ENOMEM;
-
-	dev_hold(ethernet_dev);
-	ds->ports[index].ethernet = ethernet_dev;
-	ds->cpu_port_mask |= BIT(index);
 
 	return 0;
 }

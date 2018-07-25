@@ -1,28 +1,4 @@
 <stdin>:1332:2: warning: #warning syscall io_pgetevents not implemented [-Wcpp]
-net/dsa/dsa2.c: In function 'dsa_switch_teardown':
-net/dsa/dsa2.c:399:6: error: 'port' undeclared (first use in this function)
-  if (port->netdev)
-      ^~~~
-net/dsa/dsa2.c:399:6: note: each undeclared identifier is reported only once for each function it appears in
-net/dsa/dsa2.c: In function 'dsa_switch_parse_member_of':
-net/dsa/dsa2.c:667:11: error: 'ethernet_dev' undeclared (first use in this function)
-  dev_hold(ethernet_dev);
-           ^~~~~~~~~~~~
-net/dsa/dsa2.c:668:12: error: 'index' undeclared (first use in this function)
-  ds->ports[index].ethernet = ethernet_dev;
-            ^~~~~
-net/dsa/dsa2.c:669:4: error: 'struct dsa_switch' has no member named 'cpu_port_mask'
-  ds->cpu_port_mask |= BIT(index);
-    ^~
-At top level:
-net/dsa/dsa2.c:674:12: warning: 'dsa_user_parse' defined but not used [-Wunused-function]
+net/dsa/dsa2.c:680:12: warning: 'dsa_user_parse' defined but not used [-Wunused-function]
  static int dsa_user_parse(struct dsa_port *port, u32 index,
             ^~~~~~~~~~~~~~
-make[2]: *** [net/dsa/dsa2.o] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [net/dsa] Error 2
-make[1]: *** Waiting for unfinished jobs....
-arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning (reg_format): /switch@0:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 2)
-arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-make: *** [net] Error 2
