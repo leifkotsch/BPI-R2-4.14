@@ -23,11 +23,14 @@ static int usb_phy_roothub_add_phy(struct device *dev, int index,
 				   struct list_head *list)
 {
 	struct usb_phy_roothub *roothub_entry;
-	struct phy *phy;
+	struct phy *phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
 
-	phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
-	if (IS_ERR(phy))
-		return (PTR_ERR(phy) == -ENODEV) ? 0 : PTR_ERR(phy);
+	if (IS_ERR_OR_NULL(phy)) {
+		if (!phy || PTR_ERR(phy) == -ENODEV)
+			return 0;
+		else
+			return PTR_ERR(phy);
+	}
 
 	roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
 	if (!roothub_entry)
