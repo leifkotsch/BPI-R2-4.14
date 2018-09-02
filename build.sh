@@ -27,9 +27,24 @@ fi;
 
 #Check Dependencies
 PACKAGE_Error=0
-for package in "u-boot-tools" "bc" "make" "gcc" "libc6-dev" "libncurses5-dev" "libssl-dev" "fakeroot" "ccache"; do
-	TESTPKG=$(dpkg -l |grep "\s${package}")
-	if [[ -z "${TESTPKG}" ]];then echo "please install ${package}";PACKAGE_Error=1;fi
+
+#generic package names
+packages="bc make gcc fakeroot ccache "
+
+source /etc/os-release
+if [ ${ID_LIKE} == "arch" ]; then
+    packages+="uboot-tools glibc ncurses openssl"
+else
+    packages+="u-boot-tools libc6-dev libncurses5-dev libssl-dev"
+fi
+
+for package in $packages; do
+    if [ ${ID_LIKE} == "arch" ]; then
+        TESTPKG=$(pacman -Qi ${package} 2>/dev/null)
+    else
+        TESTPKG=$(dpkg --get-selections | grep "^${package}")
+    fi
+    if [[ -z "${TESTPKG}" ]];then echo "please install ${package}";PACKAGE_Error=1;fi
 done
 if [ ${PACKAGE_Error} == 1 ]; then exit 1; fi
 
