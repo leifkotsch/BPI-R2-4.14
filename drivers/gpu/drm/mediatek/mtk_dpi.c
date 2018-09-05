@@ -77,6 +77,7 @@ struct mtk_dpi {
 	enum mtk_dpi_out_bit_num bit_num;
 	enum mtk_dpi_out_channel_swap channel_swap;
 	bool power_sta;
+	int refcount;
 	u8 power_ctl;
 };
 
@@ -369,6 +370,12 @@ static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
 
 static void mtk_dpi_power_off(struct mtk_dpi *dpi, enum mtk_dpi_power_ctl pctl)
 {
+	if (WARN_ON(dpi->refcount == 0))
+		return;
+
+	if (--dpi->refcount != 0)
+		return;
+
 	dpi->power_ctl &= ~pctl;
 
 	if ((dpi->power_ctl & DPI_POWER_START) ||
@@ -388,14 +395,17 @@ static int mtk_dpi_power_on(struct mtk_dpi *dpi, enum mtk_dpi_power_ctl pctl)
 {
 	int ret;
 
+	if (++dpi->refcount != 1)
+		return 0;
+
 	dpi->power_ctl |= pctl;
 
 	if (!(dpi->power_ctl & DPI_POWER_START) &&
 	    !(dpi->power_ctl & DPI_POWER_ENABLE))
-		return 0;
+		goto err_refcount;
 
 	if (dpi->power_sta)
-		return 0;
+		goto err_refcount;
 
 	ret = clk_prepare_enable(dpi->engine_clk);
 	if (ret) {
@@ -417,6 +427,8 @@ err_pixel:
 	clk_disable_unprepare(dpi->engine_clk);
 err_eng:
 	dpi->power_ctl &= ~pctl;
+err_refcount:
+	dpi->refcount--;
 	return ret;
 }
 
