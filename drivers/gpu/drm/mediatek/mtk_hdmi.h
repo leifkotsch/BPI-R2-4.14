@@ -45,5 +45,6 @@ extern struct platform_driver mtk_cec_driver;
 extern struct platform_driver mtk_hdmi_ddc_driver;
 extern struct platform_driver mtk_hdmi_phy_driver;
 extern struct mtk_hdmi_phy_conf mtk_hdmi_phy_8173_conf;
+extern struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf;
 
 #endif /* _MTK_HDMI_CTRL_H */
