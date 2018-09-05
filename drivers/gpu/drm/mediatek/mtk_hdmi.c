@@ -233,6 +233,7 @@ static void mtk_hdmi_hw_vid_black(struct mtk_hdmi *hdmi, bool black)
 static void mtk_hdmi_hw_make_reg_writable(struct mtk_hdmi *hdmi, bool enable)
 {
 	struct arm_smccc_res res;
+	struct mtk_hdmi_phy *hdmi_phy = phy_get_drvdata(hdmi->phy);
 
 	/*
 	 * MT8173 HDMI hardware has an output control bit to enable/disable HDMI
@@ -240,8 +241,13 @@ static void mtk_hdmi_hw_make_reg_writable(struct mtk_hdmi *hdmi, bool enable)
 	 * The ARM trusted firmware provides an API for the HDMI driver to set
 	 * this control bit to enable HDMI output in supervisor mode.
 	 */
-	arm_smccc_smc(MTK_SIP_SET_AUTHORIZED_SECURE_REG, 0x14000904, 0x80000000,
-		      0, 0, 0, 0, 0, &res);
+	if (hdmi_phy->conf && hdmi_phy->conf->tz_enabled)
+		arm_smccc_smc(MTK_SIP_SET_AUTHORIZED_SECURE_REG, 0x14000904,
+			      0x80000000, 0, 0, 0, 0, 0, &res);
+	else
+		regmap_update_bits(hdmi->sys_regmap,
+				   hdmi->sys_offset + HDMI_SYS_CFG20,
+				   0x80008005, enable ? 0x80000005 : 0x8000);
 
 	regmap_update_bits(hdmi->sys_regmap, hdmi->sys_offset + HDMI_SYS_CFG20,
 			   HDMI_PCLK_FREE_RUN, enable ? HDMI_PCLK_FREE_RUN : 0);
@@ -1437,11 +1443,24 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
 	struct platform_device *cec_pdev;
 	struct regmap *regmap;
 	struct resource *mem;
+	const char *phy_name;
 	int ret;
 
 	ret = mtk_hdmi_get_all_clk(hdmi, np);
 	if (ret) {
 		dev_err(dev, "Failed to get clocks: %d\n", ret);
+		return ret;
+	}
+
+	ret = of_property_read_string(np, "phy-names", &phy_name);
+	if (ret < 0) {
+		dev_err(dev, "Failed to read phy-names: %d\n", ret);
+		return ret;
+	}
+	hdmi->phy = devm_phy_get(dev, phy_name);
+	if (IS_ERR(hdmi->phy)) {
+		ret = PTR_ERR(hdmi->phy);
+		dev_err(dev, "Failed to get HDMI PHY: %d\n", ret);
 		return ret;
 	}
 
@@ -1676,13 +1695,6 @@ static int mtk_drm_hdmi_probe(struct platform_device *pdev)
 	ret = mtk_hdmi_dt_parse_pdata(hdmi, pdev);
 	if (ret)
 		return ret;
-
-	hdmi->phy = devm_phy_get(dev, "hdmi");
-	if (IS_ERR(hdmi->phy)) {
-		ret = PTR_ERR(hdmi->phy);
-		dev_err(dev, "Failed to get HDMI PHY: %d\n", ret);
-		return ret;
-	}
 
 	platform_set_drvdata(pdev, hdmi);
 
