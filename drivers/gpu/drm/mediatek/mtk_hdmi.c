@@ -1669,15 +1669,16 @@ static void mtk_hdmi_register_audio_driver(struct device *dev)
 		.max_i2s_channels = 2,
 		.i2s = 1,
 	};
-	struct platform_device *pdev;
+	static struct platform_device *pdev;
 
-	pdev = platform_device_register_data(dev, HDMI_CODEC_DRV_NAME,
-					     PLATFORM_DEVID_AUTO, &codec_data,
-					     sizeof(codec_data));
-	if (IS_ERR(pdev))
-		return;
-
-	DRM_INFO("%s driver bound to HDMI\n", HDMI_CODEC_DRV_NAME);
+	if (!pdev) {
+		pdev = platform_device_register_data(dev, HDMI_CODEC_DRV_NAME,
+							PLATFORM_DEVID_NONE,
+							&codec_data,
+							sizeof(codec_data));
+		DRM_INFO("%s driver bound to HDMI\n", HDMI_CODEC_DRV_NAME);
+	}
+	return;
 }
 
 static int mtk_drm_hdmi_probe(struct platform_device *pdev)
@@ -1691,6 +1692,7 @@ static int mtk_drm_hdmi_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	hdmi->dev = dev;
+	mtk_hdmi_register_audio_driver(dev);
 
 	ret = mtk_hdmi_dt_parse_pdata(hdmi, pdev);
 	if (ret)
@@ -1703,8 +1705,6 @@ static int mtk_drm_hdmi_probe(struct platform_device *pdev)
 		dev_err(dev, "Failed to initialize hdmi output\n");
 		return ret;
 	}
-
-	mtk_hdmi_register_audio_driver(dev);
 
 	hdmi->bridge.funcs = &mtk_hdmi_bridge_funcs;
 	hdmi->bridge.of_node = pdev->dev.of_node;
