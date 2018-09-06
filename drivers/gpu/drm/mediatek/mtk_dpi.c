@@ -407,7 +407,7 @@ static void mtk_dpi_power_off(struct mtk_dpi *dpi, enum mtk_dpi_power_ctl pctl)
 
 static int mtk_dpi_power_on(struct mtk_dpi *dpi, enum mtk_dpi_power_ctl pctl)
 {
-	int ret;
+	int ret = 0;
 
 	if (++dpi->refcount != 1)
 		return 0;
