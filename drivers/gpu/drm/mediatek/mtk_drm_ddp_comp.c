@@ -309,7 +309,7 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
 			"Missing mediadek,larb phandle in %pOF node\n", node);
 		return -EINVAL;
 	}
-
+printk(KERN_ALERT "DEBUG: Passed %s %d larb_node:%s\n",__FUNCTION__,__LINE__,larb_node->name);
 	larb_pdev = of_find_device_by_node(larb_node);
 	if (!larb_pdev) {
 		dev_warn(dev, "Waiting for larb device %pOF\n", larb_node);
@@ -319,7 +319,8 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
 	of_node_put(larb_node);
 
 	comp->larb_dev = &larb_pdev->dev;
-
+printk(KERN_ALERT "DEBUG: Passed %s %d comp->larb_dev->of_node->name: %s\n",__FUNCTION__,__LINE__,comp->larb_dev->of_node->name);
+printk(KERN_ALERT "DEBUG: Passed %s %d comp->larb_dev->driver_data: 0x%x\n",__FUNCTION__,__LINE__,comp->larb_dev->driver_data);
 	return 0;
 }
 
