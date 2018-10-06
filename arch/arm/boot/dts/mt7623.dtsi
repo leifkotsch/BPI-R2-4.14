@@ -318,13 +318,11 @@
 		clock-output-names = "mipi_tx0_pll";
 		#clock-cells = <0>;
 		#phy-cells = <0>;
-		status = "disabled";
 	};
 
 	cec: cec@10012000 {
-		compatible = "mediatek,mt8173-cec",
-			     "mediatek,mt7623-cec",
-			     "mediatek,mt2701-cec";
+		compatible = "mediatek,mt7623-cec",
+			     "mediatek,mt8173-cec";
 		reg = <0 0x10012000 0 0xbc>;
 		interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&infracfg CLK_INFRA_CEC>;
@@ -537,17 +535,6 @@
 		status = "disabled";
 	};
 
-	hdmiddc0: i2c@11013000 {
-		compatible = "mediatek,mt8173-hdmi-ddc",
-			     "mediatek,mt7623-hdmi-ddc",
-			     "mediatek,mt2701-hdmi-ddc";
-		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
-		reg = <0 0x11013000 0 0x1C>;
-		clocks = <&pericfg CLK_PERI_I2C3>;
-		clock-names = "ddc-i2c";
-		status = "disabled";
-	};
-
 	thermal: thermal@1100b000 {
 		#thermal-sensor-cells = <1>;
 		compatible = "mediatek,mt7623-thermal",
@@ -611,6 +598,16 @@
 		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&pericfg CLK_PERI_NFI_ECC>;
 		clock-names = "nfiecc_clk";
+		status = "disabled";
+	};
+
+	hdmiddc0: i2c@11013000 {
+		compatible = "mediatek,mt7623-hdmi-ddc",
+			     "mediatek,mt8173-hdmi-ddc";
+		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
+		reg = <0 0x11013000 0 0x1C>;
+		clocks = <&pericfg CLK_PERI_I2C3>;
+		clock-names = "ddc-i2c";
 		status = "disabled";
 	};
 
@@ -803,14 +800,14 @@
 
 	display_components: dispsys@14000000 {
 		compatible = "mediatek,mt7623-mmsys",
-					"mediatek,mt2701-mmsys";
+			     "mediatek,mt2701-mmsys";
 		reg = <0 0x14000000 0 0x1000>;
 		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
 	};
 
 	ovl@14007000 {
 		compatible = "mediatek,mt7623-disp-ovl",
-					"mediatek,mt2701-disp-ovl";
+			     "mediatek,mt2701-disp-ovl";
 		reg = <0 0x14007000 0 0x1000>;
 		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&mmsys CLK_MM_DISP_OVL>;
@@ -820,7 +817,7 @@
 
 	rdma0: rdma@14008000 {
 		compatible = "mediatek,mt7623-disp-rdma",
-					"mediatek,mt2701-disp-rdma";
+			     "mediatek,mt2701-disp-rdma";
 		reg = <0 0x14008000 0 0x1000>;
 		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&mmsys CLK_MM_DISP_RDMA>;
@@ -830,7 +827,7 @@
 
 	wdma@14009000 {
 		compatible = "mediatek,mt7623-disp-wdma",
-					"mediatek,mt2701-disp-wdma";
+			     "mediatek,mt2701-disp-wdma";
 		reg = <0 0x14009000 0 0x1000>;
 		interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&mmsys CLK_MM_DISP_WDMA>;
@@ -838,20 +835,20 @@
 		mediatek,larb = <&larb0>;
 	};
 
-	bls: bls@1400a000 {
+	bls: pwm@1400a000 {
 		compatible = "mediatek,mt7623-disp-pwm",
-					"mediatek,mt2701-disp-pwm";
+			     "mediatek,mt2701-disp-pwm";
 		reg = <0 0x1400a000 0 0x1000>;
 		#pwm-cells = <2>;
 		clocks = <&mmsys CLK_MM_MDP_BLS_26M>,
-			<&mmsys CLK_MM_DISP_BLS>;
+			 <&mmsys CLK_MM_DISP_BLS>;
 		clock-names = "main", "mm";
- 		status = "disabled";
+		status = "disabled";
 	};
 
 	color@1400b000 {
 		compatible = "mediatek,mt7623-disp-color",
-					"mediatek,mt2701-disp-color";
+			     "mediatek,mt2701-disp-color";
 		reg = <0 0x1400b000 0 0x1000>;
 		interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&mmsys CLK_MM_DISP_COLOR>;
@@ -859,12 +856,12 @@
 
 	dsi: dsi@1400c000 {
 		compatible = "mediatek,mt7623-dsi",
-					"mediatek,mt2701-dsi";
+			     "mediatek,mt2701-dsi";
 		reg = <0 0x1400c000 0 0x1000>;
 		interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&mmsys CLK_MM_DSI_ENGINE>,
-			<&mmsys CLK_MM_DSI_DIG>,
-			<&mipi_tx0>;
+			 <&mmsys CLK_MM_DSI_DIG>,
+			 <&mipi_tx0>;
 		clock-names = "engine", "digital", "hs";
 		phys = <&mipi_tx0>;
 		phy-names = "dphy";
@@ -873,7 +870,7 @@
 
 	mutex: mutex@1400e000 {
 		compatible = "mediatek,mt7623-disp-mutex",
-					"mediatek,mt2701-disp-mutex";
+			     "mediatek,mt2701-disp-mutex";
 		reg = <0 0x1400e000 0 0x1000>;
 		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&mmsys CLK_MM_MUTEX_32K>;
@@ -893,7 +890,7 @@
 
 	rdma1: rdma@14012000 {
 		compatible = "mediatek,mt7623-disp-rdma",
-					"mediatek,mt2701-disp-rdma";
+			     "mediatek,mt2701-disp-rdma";
 		reg = <0 0x14012000 0 0x1000>;
 		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&mmsys CLK_MM_DISP_RDMA1>;
@@ -903,7 +900,7 @@
 
 	dpi0: dpi@14014000 {
 		compatible = "mediatek,mt7623-dpi",
-					"mediatek,mt2701-dpi";
+			     "mediatek,mt2701-dpi";
 		reg = <0 0x14014000 0 0x1000>;
 		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
 		clocks = <&mmsys CLK_MM_DPI1_DIGL>,
@@ -914,22 +911,18 @@
 	};
 
 	hdmi0: hdmi@14015000 {
-		compatible = "mediatek,mt8173-hdmi",
-					"mediatek,mt7623-hdmi",
-					"mediatek,mt2701-hdmi";
+		compatible = "mediatek,mt7623-hdmi",
+			     "mediatek,mt8173-hdmi";
 		reg = <0 0x14015000 0 0x400>;
 		clocks = <&mmsys CLK_MM_HDMI_PIXEL>,
-			<&mmsys CLK_MM_HDMI_PLL>,
-			<&mmsys CLK_MM_HDMI_AUDIO>,
-			<&mmsys CLK_MM_HDMI_SPDIF>;
+			 <&mmsys CLK_MM_HDMI_PLL>,
+			 <&mmsys CLK_MM_HDMI_AUDIO>,
+			 <&mmsys CLK_MM_HDMI_SPDIF>;
 		clock-names = "pixel", "pll", "bclk", "spdif";
 		phys = <&hdmi_phy>;
 		phy-names = "hdmi";
 		mediatek,syscon-hdmi = <&mmsys 0x900>;
 		cec = <&cec>;
-		ddc-i2c-bus = <&hdmiddc0>;
-		assigned-clocks = <&topckgen CLK_TOP_HDMI_SEL>;
-		assigned-clock-parents = <&hdmi_phy>;
 		status = "disabled";
 	};
 
@@ -1257,6 +1250,21 @@
 		pins-cir {
 			pinmux = <MT7623_PIN_46_IR_FUNC_IR>;
 			bias-disable;
+		};
+	};
+
+	hdmi_pins_a: hdmi-default {
+		pins-hdmi {
+			pinmux = <MT7623_PIN_123_HTPLG_FUNC_HTPLG>;
+			input-enable;
+			bias-pull-down;
+		};
+	};
+
+	hdmi_ddc_pins_a: hdmi_ddc-default {
+		pins-hdmi-ddc {
+			pinmux = <MT7623_PIN_124_GPIO124_FUNC_HDMISCK>,
+				 <MT7623_PIN_125_GPIO125_FUNC_HDMISD>;
 		};
 	};
 
