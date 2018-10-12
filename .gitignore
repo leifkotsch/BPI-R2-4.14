@@ -132,3 +132,19 @@ all.config
 
 # Kdevelop4
 *.kdev4
+
+#own ignores
+*.log
+*.rej
+*asn1.[ch]
+scripts/kconfig/zconf.hash.c
+
+#binary
+uImage
+arch/arm/boot/zImage-dtb
+
+#dirs to ignore
+mod/
+SD/
+DEBIAN/
+
