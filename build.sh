@@ -7,11 +7,14 @@ then
   echo "[ OK ] Proceeding now."
 fi
 
+#Define colors
 clr_red=$'\e[1;31m'
 clr_green=$'\e[1;32m'
 clr_yellow=$'\e[1;33m'
 clr_blue=$'\e[1;34m'
 clr_reset=$'\e[0m'
+
+
 
 #Check Crosscompile
 crosscompile=0
@@ -26,6 +29,7 @@ if [[ -z $(cat /proc/cpuinfo | grep -i 'model name.*ArmV7') ]]; then
 	export ARCH=arm;export CROSS_COMPILE='ccache arm-linux-gnueabihf-'
 	crosscompile=1
 fi;
+
 
 #Check Dependencies
 PACKAGE_Error=0
@@ -82,22 +86,43 @@ function pack {
 
 function install {
 
-	imagename="uImage_${kernver}-${gitbranch}"
-	read -e -i $imagename -p "uImage-filename: " input
+    #Check if /boot mounted correct?
+
+    #Default uImage name:
+	imagename="uImage"
+	#imagename="uImage_${kernver}-${gitbranch}"
+	
+	if [ -e /boot/bananapi/bpi-r2/linux/uImage  ]; then
+        echo "uImage file exists. Probably uImage is the default image file. Will backup it."
+        olduimage="uImage"
+        read -e -i $olduimage -p "Set uImage filename: " input
+    else
+        echo "uImage default file does not exist. Listing /boot/bananapi/bpi-r2/linux/ "
+        echo `ls -lAhi /boot/bananapi/bpi-r2/linux/`
+        read -e -i "[?]" -p "Current uImage(Read from listing above!): " olduimage
+        read -e -i $imagename -p "Set uImage filename: " input
+	fi
+	
+	#read -e -i $imagename -p "uImage-filename: " input
+	
 	imagename="${input:-$imagename}"
 
-	echo "Name: $imagename"
+	echo "Kernel file will be:  $imagename"
 
 	if [[ $crosscompile -eq 0 ]]; then
 		kernelfile=/boot/bananapi/bpi-r2/linux/$imagename
+		oldkernelfile=/boot/bananapi/bpi-r2/linux/$olduimage
 		if [[ -e $kernelfile ]];then
-			echo "backup of kernel: $kernelfile.bak"
-			cp $kernelfile $kernelfile.bak
+			echo "Creating backup of kernel: $oldkernelfile.bak..."
+			cp $oldkernelfile $oldkernelfile.bak
+			echo "Installing new kernel file..."
 			cp ./uImage $kernelfile
+			echo "Installing modules..."
 			sudo make modules_install
+			echo "[Done]"
 		else
-			echo "Actual kernel not found..."
-			echo "is /boot mounted?"
+			echo "Actual kernel file $kernelfile not found..."
+			echo "Is /boot mounted?"
 		fi
 	else
 		echo "By default this kernel-file will be loaded (uEnv.txt):"
@@ -251,7 +276,7 @@ EOF
 
 function build {
 	if [ -e ".config" ]; then
-		echo Cleanup Kernel Build
+		echo "Cleanup Kernel Build"
 		rm arch/arm/boot/zImage-dtb 2>/dev/null
 		rm ./uImage 2>/dev/null
 
@@ -504,7 +529,7 @@ if [ -n "$kernver" ]; then
 					echo "2) install to SD-Card"
 				fi;
 				echo "3) deb-package"
-				read -n1 -p "choice [123]:" choice
+				read -n1 -p "Press [1|2|3] to choice:" choice
 				echo
 				if [[ "$choice" == "1" ]]; then
 					$0 pack
