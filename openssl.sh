@@ -1,7 +1,7 @@
 #!/bin/bash
 if [[ ! -d ./openssl ]];
 then
-  git clone --depth 1 https://github.com/openssl/openssl.git --branch OpenSSL_1_1_0-stable ./openssl
+  git clone --depth 1 https://github.com/openssl/openssl.git --branch OpenSSL_1_1_1-stable ./openssl
 fi
 cd openssl
 git fetch --depth 1
@@ -22,7 +22,10 @@ make clean
 echo $?
 echo "========================================================"
 
+
+
 make
+
 #cd ${INSTALL_DIR}/
 #cd lib
 #$AR -x libcrypto.a
