@@ -95,12 +95,12 @@ function install {
 	if [ -e /boot/bananapi/bpi-r2/linux/uImage  ]; then
         echo "uImage file exists. Probably uImage is the default image file. Will backup it."
         olduimage="uImage"
-        read -e -i $olduimage -p "Set uImage filename: " input
+        read -e -i $olduimage -p "Change uImage filename: " input
     else
         echo "uImage default file does not exist. Listing /boot/bananapi/bpi-r2/linux/ "
         echo `ls -lAhi /boot/bananapi/bpi-r2/linux/`
         read -e -i "[?]" -p "Current uImage(Read from listing above!): " olduimage
-        read -e -i $imagename -p "Set uImage filename: " input
+        read -e -i $imagename -p "Set uImage new filename: " input
 	fi
 	
 	#read -e -i $imagename -p "uImage-filename: " input
