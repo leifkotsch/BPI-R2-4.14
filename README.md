@@ -12,6 +12,8 @@ If you build it directly on the BananaPi-R2 (not recommended) you do not need th
 
 ## Issues
 
+Find issues <a href="https://github.com/frank-w/BPI-R2-4.14/issues" >here</a>.
+
 ## Usage
 
 ```sh
