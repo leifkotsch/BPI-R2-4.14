@@ -43,8 +43,8 @@ done
 if [ ${PACKAGE_Error} == 1 ]; then exit 1; fi
 
 kernver=$(make kernelversion)
-kernbranch=$(git rev-parse --abbrev-ref HEAD)
-#kernbranch=$(git branch --contains $(git log -n 1 --pretty='%h') | grep -v '(HEAD' | head -1 | sed 's/^..//')
+#kernbranch=$(git rev-parse --abbrev-ref HEAD)
+kernbranch=$(git branch --contains $(git log -n 1 --pretty='%h') | grep -v '(HEAD' | head -1 | sed 's/^..//')
 gitbranch=$(echo $kernbranch|sed 's/^4\.[0-9]\+-//')
 
 function increase_kernel {
@@ -128,22 +128,34 @@ function install {
 			echo "Is /boot mounted?"
 		fi
 	else
-		echo "By default this kernel-file will be loaded (uEnv.txt):"
-		grep '^kernel=' /media/${USER}/BPI-BOOT/bananapi/bpi-r2/linux/uEnv.txt|tail -1
 		read -p "Press [enter] to copy data to SD-Card..."
 		if  [[ -d /media/$USER/BPI-BOOT ]]; then
-			kernelfile=/media/$USER/BPI-BOOT/bananapi/bpi-r2/linux/$imagename
+			targetdir=/media/$USER/BPI-BOOT/bananapi/bpi-r2/linux
+			kernelfile=$targetdir/$imagename
 			if [[ -e $kernelfile ]];then
 				echo "backup of kernel: $kernelfile.bak"
 				cp $kernelfile $kernelfile.bak
 			fi
 			echo "copy new kernel"
 			cp ./uImage $kernelfile
+			cp ./uImage_nodt ${kernelfile}_nodt
+			mkdir -p $targetdir/dtb
+			dtbfile=$targetdir/dtb/${kernver}-${gitbranch}.dtb
+			if [[ -e $dtbfile ]];then
+				echo "backup of dtb: $dtbfile.bak"
+				cp $dtbfile $dtbfile.bak
+			fi
+			cp ./bpi-r2.dtb $dtbfile
 			echo "copy modules (root needed because of ext-fs permission)"
 			export INSTALL_MOD_PATH=/media/$USER/BPI-ROOT/;
 			echo "INSTALL_MOD_PATH: $INSTALL_MOD_PATH"
 			sudo make ARCH=$ARCH INSTALL_MOD_PATH=$INSTALL_MOD_PATH modules_install
 			echo "syncing sd-card...this will take a while"
+
+			echo "uImage:${kernelfile} / ${kernelfile}_nodt"
+			echo "DTB: ${dtbfile}"
+			echo "by default this kernel-file will be loaded (kernel-var in uEnv.txt):"
+			grep '^kernel=' /media/${USER}/BPI-BOOT/bananapi/bpi-r2/linux/uEnv.txt|tail -1
 			sync
 
 			kernelname=$(ls -1t $INSTALL_MOD_PATH"/lib/modules" | head -n 1)
@@ -179,7 +191,7 @@ function deb {
 #    fname=bpi-r2_${kernver}_${gitbranch}.tar.gz
 #    tar -cz --owner=root --group=root -f $fname BPI-BOOT BPI-ROOT
 
-  mkdir -p debian/bananapi-r2-image/boot/bananapi/bpi-r2/linux/
+  mkdir -p debian/bananapi-r2-image/boot/bananapi/bpi-r2/linux/dtb/
   mkdir -p debian/bananapi-r2-image/lib/modules/
   mkdir -p debian/bananapi-r2-image/DEBIAN/
   rm debian/bananapi-r2-image/boot/bananapi/bpi-r2/linux/*
@@ -188,6 +200,8 @@ function deb {
   #sudo mount --bind ../SD/BPI-ROOT/lib/modules debian/bananapi-r2-image/lib/modules/
   if test -e ./uImage && test -d ../SD/BPI-ROOT/lib/modules/${ver}; then
     cp ./uImage debian/bananapi-r2-image/boot/bananapi/bpi-r2/linux/${uimagename}
+    cp ./uImage_nodt debian/bananapi-r2-image/boot/bananapi/bpi-r2/linux/${uimagename}_nodt
+    cp ./bpi-r2.dtb debian/bananapi-r2-image/boot/bananapi/bpi-r2/linux/dtb/bpi-r2-${kernver}-${gitbranch}.dtb
 #    pwd
     cp -r ../SD/BPI-ROOT/lib/modules/${ver} debian/bananapi-r2-image/lib/modules/
     #rm debian/bananapi-r2-image/lib/modules/${ver}/{build,source}
@@ -292,7 +306,18 @@ function build {
 		if [[ $ret == 0 ]]; then
 			cat arch/arm/boot/zImage arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb > arch/arm/boot/zImage-dtb
 			mkimage -A arm -O linux -T kernel -C none -a 80008000 -e 80008000 -n "Linux Kernel $kernver-$gitbranch" -d arch/arm/boot/zImage-dtb ./uImage
+
+			echo "build uImage without appended DTB..."
+			export DTC_FLAGS=-@
+			make ${CFLAGS} CONFIG_ARM_APPENDED_DTB=n &>/dev/null #output/errors can be ignored because they are printed before
+			ret=$?
+			if [[ $ret == 0 ]]; then
+				cp arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb ./bpi-r2.dtb
+				mkimage -A arm -O linux -T kernel -C none -a 80008000 -e 80008000 -n "Linux Kernel $kernver-$gitbranch" -d arch/arm/boot/zImage ./uImage_nodt
+			fi
 		fi
+
+
 	else
 		echo "No configfile found, please configure kernel first."
 	fi
@@ -307,7 +332,7 @@ function prepare_SD {
 	for toDel in "$SD/BPI-BOOT/" "$SD/BPI-ROOT/"; do
 		rm -r ${toDel} 2>/dev/null
 	done
-	for createDir in "$SD/BPI-BOOT/bananapi/bpi-r2/linux/" "$SD/BPI-ROOT/lib/modules" "$SD/BPI-ROOT/etc/firmware" "$SD/BPI-ROOT/usr/bin" "$SD/BPI-ROOT/system/etc/firmware" "$SD/BPI-ROOT/lib/firmware"; do
+	for createDir in "$SD/BPI-BOOT/bananapi/bpi-r2/linux/dtb" "$SD/BPI-ROOT/lib/modules" "$SD/BPI-ROOT/etc/firmware" "$SD/BPI-ROOT/usr/bin" "$SD/BPI-ROOT/system/etc/firmware" "$SD/BPI-ROOT/lib/firmware"; do
 		mkdir -p ${createDir} >/dev/null 2>/dev/null
 	done
 
@@ -315,6 +340,9 @@ function prepare_SD {
 	export INSTALL_MOD_PATH=$SD/BPI-ROOT/;
 	echo "INSTALL_MOD_PATH: $INSTALL_MOD_PATH"
 	cp ./uImage $SD/BPI-BOOT/bananapi/bpi-r2/linux/uImage
+    cp ./uImage_nodt $SD/BPI-BOOT/bananapi/bpi-r2/linux/uImage_nodt
+    cp ./bpi-r2.dtb $SD/BPI-BOOT/bananapi/bpi-r2/linux/dtb/bpi-r2.dtb
+
 	make modules_install
 
 	#Add CryptoDev Module if exists or Blacklist
@@ -393,15 +421,22 @@ if [ -n "$kernver" ]; then
 			update_kernel_source
 			;;
 
- 		"umount")
+		"umount")
 			echo "umount SD Media"
 			umount /media/$USER/BPI-BOOT
 			umount /media/$USER/BPI-ROOT
 			;;
 
- 		"uenv")
+		"uenv")
 			echo "edit uEnv.txt on sd-card"
 			nano /media/$USER/BPI-BOOT/bananapi/bpi-r2/linux/uEnv.txt
+			;;
+
+		"lskernel")
+			echo "list kernels on sd-card"
+			ls -lh /media/$USER/BPI-BOOT/bananapi/bpi-r2/linux/
+			echo "available DTBs:"
+			ls -lh /media/$USER/BPI-BOOT/bananapi/bpi-r2/linux/dtb
 			;;
 
 		"defconfig")
